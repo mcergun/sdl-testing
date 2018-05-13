@@ -1,0 +1,21 @@
+#ifndef _WORD_LIST_H_
+#define _WORD_LIST_H_
+
+#include <string>
+#include <vector>
+
+class WordList
+{
+public:
+	WordList();
+	WordList & AddWord(std::string word);
+	bool DoesCharMatch(const char c);
+	WordList & EraseLastCharacter();
+private:
+	std::vector<std::string> words = std::vector<std::string>();
+	std::vector<bool>wordMatches = std::vector<bool>();
+	char compareBuf[256] = { 0 };
+	unsigned int bufIdx = 0;
+};
+
+#endif
