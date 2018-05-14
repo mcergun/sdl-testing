@@ -4,18 +4,10 @@
 
 #include <WordList.h>
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 #define DEBUG_PRINT(eq) std::cout << (#eq) << " = " << (eq) << std::endl;
 
-int initSDL();
-int closeSDL();
-
-const int WIDTH = 960;
-const int HEIGHT = 540;
-
-SDL_Window *window = nullptr;
-SDL_Renderer *renderer = nullptr;
-SDL_Event e;
 bool quit = false;
 
 int main(int argc, char **argv)
@@ -38,63 +30,55 @@ int main(int argc, char **argv)
 	list.EraseLastCharacter();
 	DEBUG_PRINT(list.DoesCharMatch('2'));
 
-	if (!initSDL())
-	{
-		//SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
-		//SDL_RenderClear(renderer);
-		//SDL_RenderPresent(renderer);
-		SDL_Surface *surf = SDL_LoadBMP("C:\\Users\\mert\\Pictures\\youtd.BMP");
-		if (surf)
-		{
-			SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surf);
-			SDL_FreeSurface(surf);
-			SDL_RenderClear(renderer);
-			SDL_RenderCopy(renderer, texture, nullptr, nullptr);
-			SDL_RenderPresent(renderer);
+	SDL_version compVersion;
+	const SDL_version *linkVersion = TTF_Linked_Version();
+	SDL_TTF_VERSION(&compVersion);
+	cout << std::to_string(compVersion.major) << "." <<
+		std::to_string(compVersion.minor) << "." <<
+		std::to_string(compVersion.patch) << endl;
+	cout << std::to_string(linkVersion->major) << "." <<
+		std::to_string(linkVersion->minor) << "." <<
+		std::to_string(linkVersion->patch) << endl;
 
-			while (!quit)
-			{
-				while (!SDL_PollEvent(&e))
-				{
-					if (e.type == SDL_QUIT)
-					{
-						quit = true;
-					}
-				}
-			}
-			SDL_DestroyTexture(texture);
-			closeSDL();
+	if (SDL_Init(SDL_INIT_EVERYTHING) != 0 || TTF_Init() != 0)
+	{
+		goto exiting;
+	}
+	else
+	{
+		cout << "SDL initializations are successful" << endl;
+		auto fontPath = "./fonts/FreeSans.otf";
+		TTF_Font *font = TTF_OpenFont(fontPath, 24);
+		if (!font)
+		{
+			cout << "Can't load " << fontPath << endl;
+			cout << "Error = " << TTF_GetError() << endl;
 		}
-		cin.get();
+		SDL_Color color = { 0xff, 0xff, 0xff };
+		SDL_Surface *textSurface;
+		SDL_Window *win = SDL_CreateWindow("Window Title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 960, 540, SDL_WINDOW_SHOWN);
+		SDL_Surface *screen = SDL_GetWindowSurface(win);
+
+		SDL_Rect rect = { 0, 0, 200, 200 };
+		textSurface = TTF_RenderText_Blended(font, "Hello World!", color);
+		for (int i = 0; i < 400; i += 40)
+		{
+			rect.x = i;
+			rect.y = i;
+			SDL_BlitSurface(textSurface, &rect, screen, &rect);
+			SDL_UpdateWindowSurface(win);
+			SDL_Delay(200);
+		}
+		SDL_Delay(3000);
+		TTF_CloseFont(font);
+		SDL_FreeSurface(screen);
+		SDL_FreeSurface(textSurface);
 	}
 
-	return 0;
-}
-
-int initSDL()
-{
-	int ret = -1;
-	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
-	{
-		window = SDL_CreateWindow("Window Title", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
-		if (window)
-		{
-			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-			if (renderer)
-			{
-				SDL_SetRenderDrawColor(renderer, 0xff, 0xff, 0xff, 0xff);
-				ret = 0;
-			}
-		}
-	}
-	return ret;
-}
-
-int closeSDL()
-{
-
-	if (window)
-		SDL_DestroyWindow(window);
+exiting:
+	TTF_Quit();
 	SDL_Quit();
+	cin.get();
+
 	return 0;
 }
