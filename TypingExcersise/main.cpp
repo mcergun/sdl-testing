@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cstdlib>
 
 #include <WordList.h>
 #include <SDL.h>
@@ -56,25 +57,79 @@ int main(int argc, char **argv)
 		}
 		SDL_Color color = { 0xaa, 0xaa, 0xaa };
 		SDL_Surface *textSurface;
-		SDL_Window *win = SDL_CreateWindow("Window Title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 960, 540, SDL_WINDOW_SHOWN);
+		SDL_Window *win = SDL_CreateWindow("Window Title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1440, 810, SDL_WINDOW_SHOWN);
 		SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-		SDL_Rect rect = { 0, 0, 200, 200 };
-		textSurface = TTF_RenderText_Blended(font, "Hello World!", color);
-		SDL_Texture *textTex = SDL_CreateTextureFromSurface(renderer, textSurface);
-		SDL_QueryTexture(textTex, nullptr, nullptr, &rect.w, &rect.h);
-		for (int i = 0; i < 1600; i += 1)
+
+		std::vector<std::string> words;
+		words.push_back("sdhshq35hwerh");
+		words.push_back("sgjwsthjsdf");
+		words.push_back("sdfjsdfjhsdfj");
+		words.push_back("sdfhsd");
+		words.push_back("fgghg");
+		words.push_back("sdfgjsdfgjsdfhjsdfh");
+		words.push_back("fghjfghj");
+		words.push_back("fghkfghkfghkfghk");
+		words.push_back("fghkfghk");
+		words.push_back("fghkfghkfghkgh");
+		words.push_back("fgghg");
+		words.push_back("as");
+		words.push_back("fggsafhg");
+		words.push_back("fghkfghk");
+		words.push_back("fghkfghkfghkgh");
+		words.push_back("sdfhsd");
+		words.push_back("fgghg");
+
+		std::vector<SDL_Rect> rects;
+		std::vector<SDL_Texture *> textTextures;
+		std::vector<double> positions;
+		rects.reserve(words.size());
+		textTextures.reserve(words.size());
+
+		for (int i = 0; i < words.size(); ++i)
 		{
-			rect.x = i / 2;
-			rect.y = i / 4;
-			SDL_RenderClear(renderer);
-			SDL_RenderCopy(renderer, textTex, nullptr, &rect);
-			SDL_RenderPresent(renderer);
-			SDL_Delay(8);
+			rects.push_back(SDL_Rect{ rand() % 500, i * 40, 0, 0 });
+			positions.push_back(rand() % 500);
 		}
-		SDL_Delay(3000);
+
+		for (int i = 0; i < words.size(); i++)
+		{
+			textSurface = TTF_RenderText_Blended(font, words[i].c_str(), color);
+			SDL_Texture *tmpTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+			if (textSurface && tmpTexture)
+			{
+				textTextures.push_back(tmpTexture);
+				SDL_QueryTexture(tmpTexture, nullptr, nullptr, &rects[i].w, &rects[i].h);
+			}
+			SDL_FreeSurface(textSurface);
+			textSurface = nullptr;
+		}
+
+		for (int i = 0; i < 1200; i += 1)
+		{
+			SDL_RenderClear(renderer);
+			for (int j = 0; j < words.size(); ++j)
+			{
+				positions[j] = positions[j] * 0.001 + positions[j] + 0.3;
+				rects[j].x = positions[j];
+
+				SDL_RenderCopy(renderer, textTextures[j], nullptr, &rects[j]);
+			}
+			SDL_RenderPresent(renderer);
+		}
+
+		SDL_Rect rect = { 0, 0, 200, 200 };
+		SDL_QueryTexture(textTextures[0], nullptr, nullptr, &rect.w, &rect.h);
+		for (int i = 0; i < 800; i += 1)
+		{
+			rect.x = i;
+			SDL_RenderClear(renderer);
+			SDL_RenderCopy(renderer, textTextures[0], nullptr, &rect);
+			SDL_RenderPresent(renderer);
+		}
+		SDL_Delay(1000);
 		TTF_CloseFont(font);
-		SDL_FreeSurface(textSurface);
+		SDL_DestroyTexture(textTextures[0]);
 		SDL_DestroyRenderer(renderer);
 	}
 
