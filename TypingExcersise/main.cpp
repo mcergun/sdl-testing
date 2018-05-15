@@ -54,25 +54,28 @@ int main(int argc, char **argv)
 			cout << "Can't load " << fontPath << endl;
 			cout << "Error = " << TTF_GetError() << endl;
 		}
-		SDL_Color color = { 0xff, 0xff, 0xff };
+		SDL_Color color = { 0xaa, 0xaa, 0xaa };
 		SDL_Surface *textSurface;
 		SDL_Window *win = SDL_CreateWindow("Window Title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 960, 540, SDL_WINDOW_SHOWN);
-		SDL_Surface *screen = SDL_GetWindowSurface(win);
+		SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 		SDL_Rect rect = { 0, 0, 200, 200 };
 		textSurface = TTF_RenderText_Blended(font, "Hello World!", color);
-		for (int i = 0; i < 400; i += 40)
+		SDL_Texture *textTex = SDL_CreateTextureFromSurface(renderer, textSurface);
+		SDL_QueryTexture(textTex, nullptr, nullptr, &rect.w, &rect.h);
+		for (int i = 0; i < 1600; i += 1)
 		{
-			rect.x = i;
-			rect.y = i;
-			SDL_BlitSurface(textSurface, &rect, screen, &rect);
-			SDL_UpdateWindowSurface(win);
-			SDL_Delay(200);
+			rect.x = i / 2;
+			rect.y = i / 4;
+			SDL_RenderClear(renderer);
+			SDL_RenderCopy(renderer, textTex, nullptr, &rect);
+			SDL_RenderPresent(renderer);
+			SDL_Delay(8);
 		}
 		SDL_Delay(3000);
 		TTF_CloseFont(font);
-		SDL_FreeSurface(screen);
 		SDL_FreeSurface(textSurface);
+		SDL_DestroyRenderer(renderer);
 	}
 
 exiting:
