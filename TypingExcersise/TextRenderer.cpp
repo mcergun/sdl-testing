@@ -8,7 +8,6 @@ TextRenderer::TextRenderer()
 TextRenderer::TextRenderer(int flags) :
 	flags(flags)
 {
-	screenCapacity = winHeight / fontHeight;
 }
 
 TextRenderer::~TextRenderer()
@@ -63,10 +62,13 @@ int TextRenderer::AddWord(std::string text)
 	if (!text.empty())
 	{
 		SDL_Texture *texture = CreateTexture(text);
-		if (texture)
+		SDL_Rect rect{ 0,0,0,0 };
+		if (SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h) == 0)
 		{
-			SDL_Rect rect{ 0,0,0,0 };
-			SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h);
+			if (screenCapacity == 0)
+			{
+				screenCapacity = winHeight / rect.h;
+			}
 			rect.y = (totalCount % screenCapacity) * rect.h;
 			rect.x = -rect.w;
 			textureSizes.push_back(rect);

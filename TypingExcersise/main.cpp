@@ -43,8 +43,6 @@ int main(int argc, char **argv)
 	cout << "SDL initializations are successful" << endl;
 	TextRenderer renderer(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	renderer.Initialize();
-	SDL_Color color = { 0xaa, 0xaa, 0xaa };
-	SDL_Surface *textSurface;
 
 	//renderer.RandomizeXLocs();
 	for (int i = 0; i < 1600; ++i)
@@ -68,9 +66,6 @@ int main(int argc, char **argv)
 
 	SDL_Delay(2000);
 
-exiting:
-	TTF_Quit();
-	SDL_Quit();
 	cin.get();
 
 	return 0;

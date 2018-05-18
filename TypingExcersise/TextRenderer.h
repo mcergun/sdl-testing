@@ -48,6 +48,6 @@ private:
 
 	const int winWidth = 800;
 	const int winHeight = 600;
-	const int fontHeight = 16;
+	int fontHeight = 20;
 };
 #endif
