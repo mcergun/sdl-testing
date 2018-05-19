@@ -48,3 +48,16 @@ WordList & WordList::EraseLastCharacter()
 	}
 	return *this;
 }
+
+size_t WordList::GetWordCount() const
+{
+	return words.size();
+}
+
+void WordList::RemoveWordAtIdx(size_t idx)
+{
+	if (idx < words.size())
+	{
+		words.erase(words.begin() + idx);
+	}
+}

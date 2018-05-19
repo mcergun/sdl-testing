@@ -5,6 +5,7 @@
 
 #include <WordList.h>
 #include <SDLTextRenderer.h>
+#include <GameLogic.h>
 
 #define DEBUG_PRINT(eq) std::cout << (#eq) << " = " << (eq) << std::endl;
 
@@ -42,27 +43,12 @@ int main(int argc, char **argv)
 
 	cout << "SDL initializations are successful" << endl;
 	SDLTextRenderer renderer(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	renderer.Initialize();
+	//renderer.Initialize();
 
-	//renderer.RandomizeXLocs();
-	for (int i = 0; i < 1600; ++i)
-	{
-		renderer.DrawAllWords();
-		renderer.MoveAllWords(ToRight, 1);
-		if (i % 20 == 0)
-		{
-			renderer.AddWord("word" + std::to_string(rand() % 999));
-		}
-		//if (i > 200)
-		//{
-		//	if (i % 28 == 1)
-		//	{
-		//		if (renderer.textures.size() > 0)
-		//			renderer.RemoveWordAtIdx(rand() % (renderer.textures.size() / 2));
-		//	}
-		//}
-		SDL_Delay(1);
-	}
+	GameLogic game;
+	game.SetRenderer(&renderer);
+
+	game.MainGame();
 
 	SDL_Delay(2000);
 
