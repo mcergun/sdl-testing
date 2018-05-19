@@ -1,16 +1,16 @@
-#include "TextRenderer.h"
+#include "SDLTextRenderer.h"
 
-TextRenderer::TextRenderer()
+SDLTextRenderer::SDLTextRenderer()
 {
 
 }
 
-TextRenderer::TextRenderer(int flags) :
+SDLTextRenderer::SDLTextRenderer(int flags) :
 	flags(flags)
 {
 }
 
-TextRenderer::~TextRenderer()
+SDLTextRenderer::~SDLTextRenderer()
 {
 	if (win)
 		SDL_DestroyWindow(win);
@@ -23,7 +23,7 @@ TextRenderer::~TextRenderer()
 	TTF_Quit();
 }
 
-int TextRenderer::Initialize()
+int SDLTextRenderer::Initialize()
 {
 	int ret = -1;
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0 && TTF_Init() == 0)
@@ -45,7 +45,7 @@ int TextRenderer::Initialize()
 	return ret;
 }
 
-void TextRenderer::Reset()
+void SDLTextRenderer::Reset()
 {
 	for (auto itm : textures)
 	{
@@ -57,7 +57,7 @@ void TextRenderer::Reset()
 	totalCount = 0;
 }
 
-int TextRenderer::AddWord(std::string text)
+int SDLTextRenderer::AddWord(std::string text)
 {
 	if (!text.empty())
 	{
@@ -79,7 +79,7 @@ int TextRenderer::AddWord(std::string text)
 	return 0;
 }
 
-void TextRenderer::MoveWord(size_t wordIdx, MoveDirection direction, int amount)
+void SDLTextRenderer::MoveWord(size_t wordIdx, MoveDirection direction, int amount)
 {
 	if (wordIdx < textures.size())
 	{
@@ -103,7 +103,7 @@ void TextRenderer::MoveWord(size_t wordIdx, MoveDirection direction, int amount)
 	}
 }
 
-void TextRenderer::MoveAllWords(MoveDirection direction, int amount)
+void SDLTextRenderer::MoveAllWords(MoveDirection direction, int amount)
 {
 	for (size_t i = 0; i < textures.size(); ++i)
 	{
@@ -111,7 +111,7 @@ void TextRenderer::MoveAllWords(MoveDirection direction, int amount)
 	}
 }
 
-void TextRenderer::MoveWord(size_t wordIdx, int x, int y)
+void SDLTextRenderer::MoveWord(size_t wordIdx, int x, int y)
 {
 	if (wordIdx < textures.size())
 	{
@@ -120,7 +120,7 @@ void TextRenderer::MoveWord(size_t wordIdx, int x, int y)
 	}
 }
 
-void TextRenderer::MoveAllWords(int x, int y)
+void SDLTextRenderer::MoveAllWords(int x, int y)
 {
 	for (size_t i = 0; i < textures.size(); ++i)
 	{
@@ -128,7 +128,7 @@ void TextRenderer::MoveAllWords(int x, int y)
 	}
 }
 
-void TextRenderer::RemoveWordAtIdx(size_t idx)
+void SDLTextRenderer::RemoveWordAtIdx(size_t idx)
 {
 	if (idx < textures.size())
 	{
@@ -137,7 +137,7 @@ void TextRenderer::RemoveWordAtIdx(size_t idx)
 	}
 }
 
-SDL_Texture * TextRenderer::CreateTexture(std::string text)
+SDL_Texture * SDLTextRenderer::CreateTexture(std::string text)
 {
 	SDL_Surface *surface = TTF_RenderText_Blended(font, text.c_str(),
 		SDL_Color{ 255, 255, 255, 255 });
@@ -148,7 +148,7 @@ SDL_Texture * TextRenderer::CreateTexture(std::string text)
 
 }
 
-int TextRenderer::DrawTexture(SDL_Texture *texture, SDL_Rect *rect, bool instant, bool clear)
+int SDLTextRenderer::DrawTexture(SDL_Texture *texture, SDL_Rect *rect, bool instant, bool clear)
 {
 	int ret = -1;
 	if (renderer && texture)
@@ -162,7 +162,7 @@ int TextRenderer::DrawTexture(SDL_Texture *texture, SDL_Rect *rect, bool instant
 	return ret;
 }
 
-int TextRenderer::DrawSurface(SDL_Surface *surface, SDL_Rect *rect, bool instant, bool clear)
+int SDLTextRenderer::DrawSurface(SDL_Surface *surface, SDL_Rect *rect, bool instant, bool clear)
 {
 	int ret = -1;
 	SDL_Texture *texture = nullptr;
@@ -176,7 +176,7 @@ int TextRenderer::DrawSurface(SDL_Surface *surface, SDL_Rect *rect, bool instant
 	return ret;
 }
 
-int TextRenderer::DrawAllWords()
+int SDLTextRenderer::DrawAllWords()
 {
 	int ret = -1;
 	if (textures.size() > 0)

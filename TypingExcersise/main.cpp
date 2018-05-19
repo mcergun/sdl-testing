@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 #include <WordList.h>
-#include <TextRenderer.h>
+#include <SDLTextRenderer.h>
 
 #define DEBUG_PRINT(eq) std::cout << (#eq) << " = " << (eq) << std::endl;
 
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 		std::to_string(linkVersion->patch) << endl;
 
 	cout << "SDL initializations are successful" << endl;
-	TextRenderer renderer(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	SDLTextRenderer renderer(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	renderer.Initialize();
 
 	//renderer.RandomizeXLocs();

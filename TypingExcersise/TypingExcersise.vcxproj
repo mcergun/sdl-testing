@@ -128,11 +128,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="TextRenderer.cpp" />
+    <ClCompile Include="SDLTextRenderer.cpp" />
     <ClCompile Include="WordList.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameLogic.h" />
+    <ClInclude Include="SDLTextRenderer.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="WordList.h" />
   </ItemGroup>
