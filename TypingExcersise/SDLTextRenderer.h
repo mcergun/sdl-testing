@@ -28,9 +28,9 @@ private:
 	int DrawTexture(SDL_Texture *texture, SDL_Rect *rect, bool instant = false, bool clear = false);
 	int DrawSurface(SDL_Surface *surface, SDL_Rect *rect, bool instant = false, bool clear = false);
 
-	SDL_Renderer *renderer;
-	SDL_Window *win;
-	TTF_Font *font;
+	SDL_Renderer *renderer = nullptr;
+	SDL_Window *win = nullptr;
+	TTF_Font *font = nullptr;
 	std::string fontPath = "./fonts/FreeMono.otf";
 	std::vector<SDL_Texture *> textures;
 	std::vector<SDL_Rect> textureSizes;

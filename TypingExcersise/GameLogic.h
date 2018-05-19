@@ -2,6 +2,7 @@
 #define _GAME_LOGIC_H_
 
 #include <TextRenderer.h>
+#include <InputHandler.h>
 #include <WordList.h>
 
 enum GameState
@@ -20,9 +21,11 @@ public:
 	int DictionarySelection();
 	int MainGame();
 	int GameLoop();
-	void SetRenderer(TextRenderer *renderer);
+	void SetRenderer(TextRenderer *newRenderer);
+	void SetInputHandler(InputHandler *newInput);
 private:
 	TextRenderer *renderer;
+	InputHandler *input;
 	WordList words;
 };
 

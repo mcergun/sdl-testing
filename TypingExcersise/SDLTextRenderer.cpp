@@ -25,22 +25,21 @@ SDLTextRenderer::~SDLTextRenderer()
 
 int SDLTextRenderer::Initialize()
 {
-	int ret = -1;
-	if (SDL_Init(SDL_INIT_EVERYTHING) == 0 && TTF_Init() == 0)
+	int ret = 0;
+	if (!(SDL_WasInit(SDL_INIT_EVERYTHING) & SDL_INIT_EVERYTHING))
 	{
-		win = SDL_CreateWindow("Game Window", SDL_WINDOWPOS_CENTERED,
+		ret |= SDL_Init(SDL_INIT_EVERYTHING);
+		win = SDL_CreateWindow("Main Window", SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
-		if (win)
-		{
-			renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED |
-				SDL_RENDERER_PRESENTVSYNC);
-			if (renderer)
-			{
-				font = TTF_OpenFont(fontPath.c_str(), fontHeight);
-				if (font)
-					ret = 0;
-			}
-		}
+		ret |= !win;
+		renderer = SDL_CreateRenderer(win, -1, flags);
+		ret |= !renderer;
+	}
+	if (!TTF_WasInit())
+	{
+		ret |= TTF_Init();
+		font = TTF_OpenFont(fontPath.c_str(), fontHeight);
+		ret |= !font;
 	}
 	return ret;
 }

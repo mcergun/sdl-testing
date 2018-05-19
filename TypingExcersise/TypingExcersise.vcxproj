@@ -130,11 +130,14 @@
   <ItemGroup>
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SDLInputHandler.cpp" />
     <ClCompile Include="SDLTextRenderer.cpp" />
     <ClCompile Include="WordList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLogic.h" />
+    <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="SDLInputHandler.h" />
     <ClInclude Include="SDLTextRenderer.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="WordList.h" />

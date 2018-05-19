@@ -18,6 +18,15 @@ void GameLogic::SetRenderer(TextRenderer * newRenderer)
 	}
 }
 
+void GameLogic::SetInputHandler(InputHandler * newInput)
+{
+	if (newInput)
+	{
+		input = newInput;
+		input->Initialize();
+	}
+}
+
 int GameLogic::MainMenu()
 {
 	return 0;
@@ -53,6 +62,7 @@ int GameLogic::MainGame()
 				}
 			}
 		}
+		input->ReadKey();
 	}
 	return ret;
 }
