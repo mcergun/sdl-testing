@@ -1,19 +1,13 @@
 #include "GameLogic.h"
 
-GameLogic::GameLogic()
-{
-}
-
-
-GameLogic::~GameLogic()
-{
-}
+GameLogic *EventRouter::gameLogic = nullptr;
 
 void GameLogic::SetRenderer(TextRenderer * newRenderer)
 {
 	if (newRenderer)
 	{
 		renderer = newRenderer;
+		renderer->SetWordOutNotifier(EventRouter::WordMovedOut);
 		renderer->Initialize();
 	}
 }
@@ -25,6 +19,15 @@ void GameLogic::SetInputHandler(InputHandler * newInput)
 		input = newInput;
 		input->Initialize();
 	}
+}
+
+void GameLogic::WordMovedOut(size_t idx)
+{
+#ifdef _DEBUG
+	std::cout << "Removed word is " << words.words[idx] << std::endl;
+#endif
+	words.RemoveWordAtIdx(idx);
+	renderer->RemoveWordAtIdx(idx);
 }
 
 int GameLogic::MainMenu()
@@ -40,10 +43,13 @@ int GameLogic::DictionarySelection()
 int GameLogic::MainGame()
 {
 	int ret = 0;
-	for (int i = 0; i < 1600; ++i)
+	bool gameRunning = true;
+	size_t i = 0;
+	while (gameRunning)
 	{
 		renderer->DrawAllWords();
 		renderer->MoveAllWords(ToRight, 1);
+		i++;
 		if (i % 25 == 0)
 		{
 			std::string word = "word" + std::to_string(rand() % 999);
@@ -52,11 +58,11 @@ int GameLogic::MainGame()
 		}
 		if (i > 200)
 		{
-			if (i % 28 == 1)
+			if (i % 32 == 1)
 			{
 				if (words.GetWordCount() > 0)
 				{
-					size_t idx = rand() % (words.GetWordCount() / 3);
+					size_t idx = rand() % (words.GetWordCount() / 2);
 					renderer->RemoveWordAtIdx(idx);
 					words.RemoveWordAtIdx(idx);
 				}
@@ -67,7 +73,27 @@ int GameLogic::MainGame()
 	return ret;
 }
 
+GameLogic::GameLogic()
+{
+	EventRouter::SetGameLogicPtr(this);
+}
+
+
+GameLogic::~GameLogic()
+{
+}
+
 int GameLogic::GameLoop()
 {
 	return 0;
+}
+
+void EventRouter::SetGameLogicPtr(GameLogic * ptr)
+{
+	gameLogic = ptr;
+}
+
+void EventRouter::WordMovedOut(size_t idx)
+{
+	gameLogic->WordMovedOut(idx);
 }

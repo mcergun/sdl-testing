@@ -41,6 +41,9 @@ int SDLTextRenderer::Initialize()
 		font = TTF_OpenFont(fontPath.c_str(), fontHeight);
 		ret |= !font;
 	}
+	ret |= !(wordMovedOut);
+	if (ret > 0)
+		ret = -ret;
 	return ret;
 }
 
@@ -99,6 +102,10 @@ void SDLTextRenderer::MoveWord(size_t wordIdx, MoveDirection direction, int amou
 		default:
 			break;
 		}
+		if (IsRectOutOfBounds(&textureSizes[wordIdx]))
+		{
+			wordMovedOut(wordIdx);
+		}
 	}
 }
 
@@ -116,6 +123,10 @@ void SDLTextRenderer::MoveWord(size_t wordIdx, int x, int y)
 	{
 		textureSizes[wordIdx].x = x;
 		textureSizes[wordIdx].y = y;
+	}
+	if (IsRectOutOfBounds(&textureSizes[wordIdx]))
+	{
+		wordMovedOut(wordIdx);
 	}
 }
 
@@ -175,6 +186,12 @@ int SDLTextRenderer::DrawSurface(SDL_Surface *surface, SDL_Rect *rect, bool inst
 	return ret;
 }
 
+bool SDLTextRenderer::IsRectOutOfBounds(SDL_Rect * rect)
+{
+	bool ret = (rect->x > winWidth) || (rect->y > winHeight);
+	return ret;
+}
+
 int SDLTextRenderer::DrawAllWords()
 {
 	int ret = -1;
@@ -188,4 +205,9 @@ int SDLTextRenderer::DrawAllWords()
 		ret |= DrawTexture(textures[textures.size() - 1], &textureSizes[textures.size() - 1], true);
 	}
 	return ret;
+}
+
+void SDLTextRenderer::SetWordOutNotifier(WordOutOfBounds func)
+{
+	wordMovedOut = func;
 }

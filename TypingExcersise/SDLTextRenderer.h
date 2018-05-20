@@ -22,15 +22,18 @@ public:
 	void MoveAllWords(int x, int y);
 	void RemoveWordAtIdx(size_t idx);
 	int DrawAllWords();
+	void SetWordOutNotifier(WordOutOfBounds func);
 
 private:
 	SDL_Texture * CreateTexture(std::string text);
 	int DrawTexture(SDL_Texture *texture, SDL_Rect *rect, bool instant = false, bool clear = false);
 	int DrawSurface(SDL_Surface *surface, SDL_Rect *rect, bool instant = false, bool clear = false);
+	inline bool IsRectOutOfBounds(SDL_Rect *rect);
 
 	SDL_Renderer *renderer = nullptr;
 	SDL_Window *win = nullptr;
 	TTF_Font *font = nullptr;
+	WordOutOfBounds wordMovedOut;
 	std::string fontPath = "./fonts/FreeMono.otf";
 	std::vector<SDL_Texture *> textures;
 	std::vector<SDL_Rect> textureSizes;
