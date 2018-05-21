@@ -4,10 +4,13 @@
 #include <string>
 #include <vector>
 
+typedef void(*WordTyped)(size_t);
+
 class WordList
 {
 public:
 	WordList();
+	void SetWordTypedNotifier(WordTyped func);
 	WordList & AddWord(std::string word);
 	bool DoesCharMatch(const char c);
 	WordList & EraseLastCharacter();
@@ -18,6 +21,7 @@ private:
 	std::vector<bool>wordMatches = std::vector<bool>();
 	char compareBuf[256] = { 0 };
 	unsigned int bufIdx = 0;
+	WordTyped wordTyped = nullptr;
 };
 
 #endif

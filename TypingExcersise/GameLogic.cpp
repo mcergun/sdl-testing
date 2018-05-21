@@ -8,6 +8,7 @@ void GameLogic::SetRenderer(TextRenderer * newRenderer)
 	{
 		renderer = newRenderer;
 		renderer->SetWordOutNotifier(EventRouter::WordMovedOut);
+		words.SetWordTypedNotifier(EventRouter::WordTyped);
 		renderer->Initialize();
 	}
 }
@@ -25,6 +26,15 @@ void GameLogic::WordMovedOut(size_t idx)
 {
 #ifdef _DEBUG
 	std::cout << "Removed word is " << words.words[idx] << std::endl;
+#endif
+	words.RemoveWordAtIdx(idx);
+	renderer->RemoveWordAtIdx(idx);
+}
+
+void GameLogic::WordTyped(size_t idx)
+{
+#ifdef _DEBUG
+	std::cout << "Typed word is " << words.words[idx] << std::endl;
 #endif
 	words.RemoveWordAtIdx(idx);
 	renderer->RemoveWordAtIdx(idx);
@@ -50,7 +60,7 @@ int GameLogic::MainGame()
 		renderer->DrawAllWords();
 		renderer->MoveAllWords(ToRight, 1);
 		i++;
-		if (i % 25 == 0)
+		if (i % 55 == 0)
 		{
 			std::string word = "word" + std::to_string(rand() % 999);
 			words.AddWord(word);
@@ -58,17 +68,22 @@ int GameLogic::MainGame()
 		}
 		if (i > 200)
 		{
-			if (i % 32 == 1)
-			{
-				if (words.GetWordCount() > 0)
-				{
-					size_t idx = rand() % (words.GetWordCount() / 2);
-					renderer->RemoveWordAtIdx(idx);
-					words.RemoveWordAtIdx(idx);
-				}
-			}
+			//if (i % 32 == 1)
+			//{
+			//	if (words.GetWordCount() > 0)
+			//	{
+			//		size_t idx = rand() % (words.GetWordCount() / 2);
+			//		renderer->RemoveWordAtIdx(idx);
+			//		words.RemoveWordAtIdx(idx);
+			//	}
+			//}
 		}
-		input->ReadKey();
+		int ret = input->ReadKey();
+		if (ret)
+		{
+			std::cout << "Key " << static_cast<char>(ret) << std::endl;
+			words.DoesCharMatch(static_cast<char>(ret));
+		}
 	}
 	return ret;
 }
@@ -96,4 +111,9 @@ void EventRouter::SetGameLogicPtr(GameLogic * ptr)
 void EventRouter::WordMovedOut(size_t idx)
 {
 	gameLogic->WordMovedOut(idx);
+}
+
+void EventRouter::WordTyped(size_t idx)
+{
+	gameLogic->WordTyped(idx);
 }

@@ -23,7 +23,20 @@ int SDLInputHandler::ReadKey()
 {
 	int ret = 0;
 	ret = SDL_PollEvent(&e);
-	if (ret)
-		SDL_Delay(500);
+	if (ret && e.type == SDL_KEYDOWN)
+	{
+		ret = e.key.keysym.sym;
+	}
+	else
+	{
+		ret = 0;
+	}
 	return ret;
+}
+
+char SDLInputHandler::KeyToVisualChar(int enumCode)
+{
+	SDL_Keycode key = static_cast<SDL_Keycode>(enumCode);
+
+	return 0;
 }

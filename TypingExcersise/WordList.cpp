@@ -7,6 +7,12 @@ WordList::WordList()
 	wordMatches.reserve(10);
 }
 
+void WordList::SetWordTypedNotifier(WordTyped func)
+{
+	if (func)
+		wordTyped = func;
+}
+
 WordList & WordList::AddWord(std::string word)
 {
 	bool found = false;
@@ -31,11 +37,15 @@ bool WordList::DoesCharMatch(const char c)
 	{
 		wordMatches[i] = words[i].find(compareBuf) == 0;
 		found |= wordMatches[i];
-	}
-
-	if (found)
-	{
-		// something should be done if compareBuf length matches with the match's length
+		if (found && words[i].length() == bufIdx)
+		{
+			// a full word is typed
+			if (wordTyped)
+				wordTyped(i);
+			memset(compareBuf, 0, bufIdx);
+			bufIdx = 0;
+			break;
+		}
 	}
 	return found;
 }

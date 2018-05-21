@@ -209,5 +209,6 @@ int SDLTextRenderer::DrawAllWords()
 
 void SDLTextRenderer::SetWordOutNotifier(WordOutOfBounds func)
 {
-	wordMovedOut = func;
+	if (func)
+		wordMovedOut = func;
 }

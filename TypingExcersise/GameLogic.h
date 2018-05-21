@@ -28,6 +28,7 @@ public:
 	void SetRenderer(TextRenderer *newRenderer);
 	void SetInputHandler(InputHandler *newInput);
 	void WordMovedOut(size_t idx);
+	void WordTyped(size_t idx);
 private:
 	TextRenderer *renderer;
 	InputHandler *input;
@@ -39,6 +40,7 @@ class EventRouter
 public:
 	static void SetGameLogicPtr(GameLogic * ptr);
 	static void WordMovedOut(size_t idx);
+	static void WordTyped(size_t idx);
 	static GameLogic *gameLogic;
 };
 
