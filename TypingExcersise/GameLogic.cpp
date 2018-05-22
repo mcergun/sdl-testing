@@ -60,7 +60,7 @@ int GameLogic::MainGame()
 		renderer->DrawAllWords();
 		renderer->MoveAllWords(ToRight, 1);
 		i++;
-		if (i % 55 == 0)
+		if (i % 40 == 0)
 		{
 			std::string word = "word" + std::to_string(rand() % 999);
 			words.AddWord(word);

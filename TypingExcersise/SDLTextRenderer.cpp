@@ -70,11 +70,26 @@ int SDLTextRenderer::AddWord(std::string text)
 			if (screenCapacity == 0)
 			{
 				screenCapacity = winHeight / rect.h;
+				// set up route statuses
+				textureRouteAvailablity.reserve(screenCapacity);
+				for (int i = 0; i < screenCapacity; ++i)
+				{
+					textureRouteAvailablity.push_back(true);
+				}
 			}
-			rect.y = (totalCount % screenCapacity) * rect.h;
+			bool routeFree = false;
+			size_t idx = 0;
+			while (!routeFree)
+			{
+				idx = rand() % screenCapacity;
+				routeFree = textureRouteAvailablity[idx];
+			}
+			textureRouteAvailablity[idx] = false;
+			rect.y = idx * rect.h;
 			rect.x = -rect.w;
 			textureSizes.push_back(rect);
 			textures.push_back(texture);
+			textureUsedRoutes.push_back(idx);
 			totalCount++;
 		}
 	}
@@ -102,6 +117,14 @@ void SDLTextRenderer::MoveWord(size_t wordIdx, MoveDirection direction, int amou
 		default:
 			break;
 		}
+		// ugly, nasty, disgusting way to solve a big problem like this
+		// if equal is changed into a greater than sign, then this check succeeds every time
+		// leading to textures resetting route to available even though it has been set to
+		// unavailable by a new word in a previous frame.
+		if (textureSizes[wordIdx].x == 30)
+		{
+			textureRouteAvailablity[textureUsedRoutes[wordIdx]] = true;
+		}
 		if (IsRectOutOfBounds(&textureSizes[wordIdx]))
 		{
 			wordMovedOut(wordIdx);
@@ -123,10 +146,10 @@ void SDLTextRenderer::MoveWord(size_t wordIdx, int x, int y)
 	{
 		textureSizes[wordIdx].x = x;
 		textureSizes[wordIdx].y = y;
-	}
-	if (IsRectOutOfBounds(&textureSizes[wordIdx]))
-	{
-		wordMovedOut(wordIdx);
+		if (IsRectOutOfBounds(&textureSizes[wordIdx]))
+		{
+			wordMovedOut(wordIdx);
+		}
 	}
 }
 
@@ -142,6 +165,11 @@ void SDLTextRenderer::RemoveWordAtIdx(size_t idx)
 {
 	if (idx < textures.size())
 	{
+		if (textureSizes[idx].x < 30)
+		{
+			textureRouteAvailablity[textureUsedRoutes[idx]] = true;
+		}
+		textureUsedRoutes.erase(textureUsedRoutes.begin() + idx);
 		textures.erase(textures.begin() + idx);
 		textureSizes.erase(textureSizes.begin() + idx);
 	}
@@ -190,6 +218,11 @@ bool SDLTextRenderer::IsRectOutOfBounds(SDL_Rect * rect)
 {
 	bool ret = (rect->x > winWidth) || (rect->y > winHeight);
 	return ret;
+}
+
+inline bool SDLTextRenderer::IsRouteClear(size_t wayIdx)
+{
+	return false;
 }
 
 int SDLTextRenderer::DrawAllWords()
