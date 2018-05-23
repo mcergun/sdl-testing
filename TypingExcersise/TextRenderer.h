@@ -27,6 +27,7 @@ public:
 	virtual void RemoveWordAtIdx(size_t idx) = 0;
 	virtual int DrawAllWords() = 0;
 	virtual void SetWordOutNotifier(WordOutOfBounds func) = 0;
+	virtual int UpdateWrittenWord(std::string word) = 0;
 };
 
 

@@ -16,6 +16,8 @@ public:
 	WordList & EraseLastCharacter();
 	size_t GetWordCount() const;
 	void RemoveWordAtIdx(size_t idx);
+	std::string GetCompareBuffer();
+
 	std::vector<std::string> words = std::vector<std::string>();
 private:
 	std::vector<bool>wordMatches = std::vector<bool>();

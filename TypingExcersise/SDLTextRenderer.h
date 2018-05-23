@@ -23,6 +23,7 @@ public:
 	void RemoveWordAtIdx(size_t idx);
 	int DrawAllWords();
 	void SetWordOutNotifier(WordOutOfBounds func);
+	int UpdateWrittenWord(std::string word);
 
 private:
 	SDL_Texture * CreateTexture(std::string text);
@@ -36,6 +37,8 @@ private:
 	TTF_Font *font = nullptr;
 	WordOutOfBounds wordMovedOut;
 	std::string fontPath = "./fonts/FreeMono.otf";
+	SDL_Texture *typingTexture;
+	SDL_Rect typingPos;
 	std::vector<SDL_Texture *> textures;
 	std::vector<SDL_Rect> textureSizes;
 	std::vector<size_t> textureUsedRoutes;

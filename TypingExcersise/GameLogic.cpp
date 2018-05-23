@@ -83,6 +83,7 @@ int GameLogic::MainGame()
 		{
 			std::cout << "Key " << static_cast<char>(ret) << std::endl;
 			words.DoesCharMatch(static_cast<char>(ret));
+			renderer->UpdateWrittenWord(words.GetCompareBuffer());
 		}
 	}
 	return ret;

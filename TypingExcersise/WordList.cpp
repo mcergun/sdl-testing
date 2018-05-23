@@ -31,13 +31,13 @@ WordList & WordList::AddWord(std::string word)
 
 bool WordList::DoesCharMatch(const char c)
 {
-	bool found = false;
+	bool foundInList = false;
 	compareBuf[bufIdx++] = c;
 	for (size_t i = 0; i < words.size(); ++i)
 	{
 		wordMatches[i] = words[i].find(compareBuf) == 0;
-		found |= wordMatches[i];
-		if (found && words[i].length() == bufIdx)
+		foundInList |= wordMatches[i];
+		if (wordMatches[i] && words[i].length() == bufIdx)
 		{
 			// a full word is typed
 			if (wordTyped)
@@ -47,7 +47,7 @@ bool WordList::DoesCharMatch(const char c)
 			break;
 		}
 	}
-	return found;
+	return foundInList;
 }
 
 WordList & WordList::EraseLastCharacter()
@@ -70,4 +70,9 @@ void WordList::RemoveWordAtIdx(size_t idx)
 	{
 		words.erase(words.begin() + idx);
 	}
+}
+
+std::string WordList::GetCompareBuffer()
+{
+	return std::string(compareBuf);
 }

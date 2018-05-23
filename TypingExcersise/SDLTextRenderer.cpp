@@ -69,7 +69,9 @@ int SDLTextRenderer::AddWord(std::string text)
 		{
 			if (screenCapacity == 0)
 			{
-				screenCapacity = winHeight / rect.h;
+				screenCapacity = winHeight / rect.h - 1;
+				typingPos.x = 100;
+				typingPos.y = screenCapacity * rect.h;
 				// set up route statuses
 				textureRouteAvailablity.reserve(screenCapacity);
 				for (int i = 0; i < screenCapacity; ++i)
@@ -121,10 +123,15 @@ void SDLTextRenderer::MoveWord(size_t wordIdx, MoveDirection direction, int amou
 		// if equal is changed into a greater than sign, then this check succeeds every time
 		// leading to textures resetting route to available even though it has been set to
 		// unavailable by a new word in a previous frame.
-		if (textureSizes[wordIdx].x == 30)
+		if (textureSizes[wordIdx].x < 30)
+		{
+			textureRouteAvailablity[textureUsedRoutes[wordIdx]] = false;
+		}
+		else if (textureSizes[wordIdx].x == 30)
 		{
 			textureRouteAvailablity[textureUsedRoutes[wordIdx]] = true;
 		}
+
 		if (IsRectOutOfBounds(&textureSizes[wordIdx]))
 		{
 			wordMovedOut(wordIdx);
@@ -195,7 +202,10 @@ int SDLTextRenderer::DrawTexture(SDL_Texture *texture, SDL_Rect *rect, bool inst
 			SDL_RenderClear(renderer);
 		ret = SDL_RenderCopy(renderer, texture, nullptr, rect);
 		if (instant)
+		{
+			ret |= SDL_RenderCopy(renderer, typingTexture, nullptr, &typingPos);
 			SDL_RenderPresent(renderer);
+		}
 	}
 	return ret;
 }
@@ -244,4 +254,15 @@ void SDLTextRenderer::SetWordOutNotifier(WordOutOfBounds func)
 {
 	if (func)
 		wordMovedOut = func;
+}
+
+int SDLTextRenderer::UpdateWrittenWord(std::string word)
+{
+	if (typingTexture != NULL)
+	{
+		SDL_DestroyTexture(typingTexture);
+	}
+	typingTexture = CreateTexture(word);
+	SDL_QueryTexture(typingTexture, nullptr, nullptr, &typingPos.w, &typingPos.h);
+	return 0;
 }
