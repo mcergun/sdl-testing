@@ -19,6 +19,7 @@ public:
 	virtual ~TextRenderer() {};
 	virtual int Initialize() = 0;
 	virtual void Reset() = 0;
+	virtual void CloseWindow() = 0;
 	virtual	int AddWord(std::string text) = 0;
 	virtual void MoveWord(size_t wordIdx, MoveDirection direction, int amount) = 0;
 	virtual void MoveAllWords(MoveDirection direction, int amount) = 0;

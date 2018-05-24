@@ -88,11 +88,8 @@ int GameLogic::MainGame()
 		renderer->DrawAllWords();
 		renderer->MoveAllWords(ToRight, 1);
 		i++;
-		if (i % 60 == 0)
+		if (i % 80 == 0)
 		{
-			//std::string word = "word" + std::to_string(rand() % 999);
-			//words.AddWord(word);
-			//renderer->AddWord(word);
 			std::string &word = words.GetRandomWord();
 			words.AddWord(word);
 			renderer->AddWord(word);
@@ -111,6 +108,7 @@ int GameLogic::MainGame()
 		}
 		int ret = input->ReadKey();
 	}
+	renderer->CloseWindow();
 	return ret;
 }
 

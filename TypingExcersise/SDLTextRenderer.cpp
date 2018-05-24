@@ -59,6 +59,12 @@ void SDLTextRenderer::Reset()
 	totalCount = 0;
 }
 
+void SDLTextRenderer::CloseWindow()
+{
+	Reset();
+	SDL_DestroyWindow(win);
+}
+
 int SDLTextRenderer::AddWord(std::string text)
 {
 	if (!text.empty())

@@ -16,6 +16,7 @@ public:
 	~SDLTextRenderer();
 	int Initialize();
 	void Reset();
+	void CloseWindow();
 	int AddWord(std::string text);
 	void MoveWord(size_t wordIdx, MoveDirection direction, int amount);
 	void MoveAllWords(MoveDirection direction, int amount);
