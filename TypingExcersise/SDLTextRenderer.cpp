@@ -41,7 +41,7 @@ int SDLTextRenderer::Initialize()
 		font = TTF_OpenFont(fontPath.c_str(), fontHeight);
 		ret |= !font;
 	}
-	ret |= !(wordMovedOut);
+	ret |= !(wordOutOfBounds);
 	if (ret > 0)
 		ret = -ret;
 	return ret;
@@ -134,7 +134,7 @@ void SDLTextRenderer::MoveWord(size_t wordIdx, MoveDirection direction, int amou
 
 		if (IsRectOutOfBounds(&textureSizes[wordIdx]))
 		{
-			wordMovedOut(wordIdx);
+			wordOutOfBounds(wordIdx);
 		}
 	}
 }
@@ -155,7 +155,7 @@ void SDLTextRenderer::MoveWord(size_t wordIdx, int x, int y)
 		textureSizes[wordIdx].y = y;
 		if (IsRectOutOfBounds(&textureSizes[wordIdx]))
 		{
-			wordMovedOut(wordIdx);
+			wordOutOfBounds(wordIdx);
 		}
 	}
 }
@@ -246,14 +246,9 @@ int SDLTextRenderer::DrawAllWords()
 			ret |= DrawTexture(textures[i], &textureSizes[i]);
 		}
 		ret |= DrawTexture(textures[textures.size() - 1], &textureSizes[textures.size() - 1], true);
+		SDL_Delay(1);
 	}
 	return ret;
-}
-
-void SDLTextRenderer::SetWordOutNotifier(WordOutOfBounds func)
-{
-	if (func)
-		wordMovedOut = func;
 }
 
 int SDLTextRenderer::UpdateWrittenWord(std::string word)

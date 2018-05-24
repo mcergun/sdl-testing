@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <mutex>
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <TextRenderer.h>
@@ -22,7 +23,6 @@ public:
 	void MoveAllWords(int x, int y);
 	void RemoveWordAtIdx(size_t idx);
 	int DrawAllWords();
-	void SetWordOutNotifier(WordOutOfBounds func);
 	int UpdateWrittenWord(std::string word);
 
 private:
@@ -35,8 +35,8 @@ private:
 	SDL_Renderer *renderer = nullptr;
 	SDL_Window *win = nullptr;
 	TTF_Font *font = nullptr;
-	WordOutOfBounds wordMovedOut;
 	std::string fontPath = "./fonts/FreeMono.otf";
+	std::mutex *listMutex = nullptr;
 	SDL_Texture *typingTexture;
 	SDL_Rect typingPos;
 	std::vector<SDL_Texture *> textures;

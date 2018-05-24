@@ -1,10 +1,25 @@
 #include <WordList.h>
+#include <fstream>
 
 WordList::WordList()
 {
 	// reserve room for at least 10 words
-	words.reserve(10);
+	activeWords.reserve(10);
 	wordMatches.reserve(10);
+}
+
+void WordList::ReadFile(std::string path)
+{
+	std::ifstream fs;
+	fs.open(path, std::ios_base::in);
+	if (fs.is_open())
+	{
+		std::string tmp;
+		while (fs >> tmp)
+		{
+			dictionary.push_back(tmp);
+		}
+	}
 }
 
 void WordList::SetWordTypedNotifier(WordTyped func)
@@ -13,19 +28,21 @@ void WordList::SetWordTypedNotifier(WordTyped func)
 		wordTyped = func;
 }
 
+void WordList::SetMutex(std::mutex * mtx)
+{
+	listMutex = mtx;
+}
+
+std::string WordList::GetRandomWord()
+{
+	size_t idx = rand() % dictionary.size();
+	return dictionary[idx];
+}
+
 WordList & WordList::AddWord(std::string word)
 {
-	bool found = false;
-	for (unsigned int i = 0; !found && i < words.size(); ++i)
-	{
-		found = words[i] == word;
-	}
-
-	if (!found)
-	{
-		words.push_back(word);
-		wordMatches.push_back(false);
-	}
+	activeWords.push_back(word);
+	wordMatches.push_back(false);
 	return *this;
 }
 
@@ -33,11 +50,11 @@ bool WordList::DoesCharMatch(const char c)
 {
 	bool foundInList = false;
 	compareBuf[bufIdx++] = c;
-	for (size_t i = 0; i < words.size(); ++i)
+	for (size_t i = 0; i < activeWords.size(); ++i)
 	{
-		wordMatches[i] = words[i].find(compareBuf) == 0;
+		wordMatches[i] = activeWords[i].find(compareBuf) == 0;
 		foundInList |= wordMatches[i];
-		if (wordMatches[i] && words[i].length() == bufIdx)
+		if (wordMatches[i] && activeWords[i].length() == bufIdx)
 		{
 			// a full word is typed
 			if (wordTyped)
@@ -54,21 +71,22 @@ WordList & WordList::EraseLastCharacter()
 {
 	if (bufIdx > 0)
 	{
-		compareBuf[bufIdx--] = 0;
+		compareBuf[--bufIdx] = 0;
 	}
 	return *this;
 }
 
 size_t WordList::GetWordCount() const
 {
-	return words.size();
+	return activeWords.size();
 }
 
 void WordList::RemoveWordAtIdx(size_t idx)
 {
-	if (idx < words.size())
+	if (idx < activeWords.size())
 	{
-		words.erase(words.begin() + idx);
+		activeWords.erase(activeWords.begin() + idx);
+		wordMatches.erase(wordMatches.begin() + idx);
 	}
 }
 

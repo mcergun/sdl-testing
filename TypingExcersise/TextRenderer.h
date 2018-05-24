@@ -3,7 +3,7 @@
 
 #include <string>
 
-typedef void(*WordOutOfBounds)(size_t);
+typedef void(*WordOutOfBoundsEvent)(size_t);
 
 enum MoveDirection
 {
@@ -26,8 +26,14 @@ public:
 	virtual void MoveAllWords(int x, int y) = 0;
 	virtual void RemoveWordAtIdx(size_t idx) = 0;
 	virtual int DrawAllWords() = 0;
-	virtual void SetWordOutNotifier(WordOutOfBounds func) = 0;
 	virtual int UpdateWrittenWord(std::string word) = 0;
+	virtual void SetWordOutNotifier(WordOutOfBoundsEvent func)
+	{
+		wordOutOfBounds = func;
+	}
+
+protected:
+	WordOutOfBoundsEvent wordOutOfBounds = nullptr;
 };
 
 

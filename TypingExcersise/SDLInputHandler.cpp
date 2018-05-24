@@ -23,9 +23,34 @@ int SDLInputHandler::ReadKey()
 {
 	int ret = 0;
 	ret = SDL_PollEvent(&e);
-	if (ret && e.type == SDL_KEYDOWN)
+	if (ret)
 	{
-		ret = e.key.keysym.sym;
+		if (e.type == SDL_KEYDOWN)
+		{
+			ret = e.key.keysym.sym;
+			switch (e.key.keysym.sym)
+			{
+			case SDLK_BACKSPACE:
+				if (backspacePressed)
+					backspacePressed();
+				break;
+			case SDLK_RETURN:
+			case SDLK_RETURN2:
+			case SDLK_KP_ENTER:
+				if (enterPressed)
+					enterPressed();
+				break;
+			default:
+				if (visualPressed)
+					visualPressed(e.key.keysym.sym);
+				break;
+			}
+		}
+		else if (e.type == SDL_QUIT)
+		{
+			if (exitRequested)
+				exitRequested();
+		}
 	}
 	else
 	{

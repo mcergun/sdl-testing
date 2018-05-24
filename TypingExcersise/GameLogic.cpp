@@ -19,13 +19,17 @@ void GameLogic::SetInputHandler(InputHandler * newInput)
 	{
 		input = newInput;
 		input->Initialize();
+		input->SetKeyEnterNotifier(EventRouter::KeyEnter);
+		input->SetKeyBackspaceNotifier(EventRouter::KeyBackspace);
+		input->SetKeyVisualNotifier(EventRouter::KeyVisual);
+		input->SetExitEventNotifier(EventRouter::ExitRequested);
 	}
 }
 
 void GameLogic::WordMovedOut(size_t idx)
 {
 #ifdef _DEBUG
-	std::cout << "Removed word is " << words.words[idx] << std::endl;
+	std::cout << "Removed word is " << words.activeWords[idx] << std::endl;
 #endif
 	words.RemoveWordAtIdx(idx);
 	renderer->RemoveWordAtIdx(idx);
@@ -34,10 +38,34 @@ void GameLogic::WordMovedOut(size_t idx)
 void GameLogic::WordTyped(size_t idx)
 {
 #ifdef _DEBUG
-	std::cout << "Typed word is " << words.words[idx] << std::endl;
+	std::cout << "Typed word is " << words.activeWords[idx] << std::endl;
 #endif
 	words.RemoveWordAtIdx(idx);
 	renderer->RemoveWordAtIdx(idx);
+}
+
+void GameLogic::KeyEnter()
+{
+	std::cout << "Enter Key" << std::endl;
+}
+
+void GameLogic::KeyBackspace()
+{
+	std::cout << "Backspace Key" << std::endl;
+	words.EraseLastCharacter();
+	renderer->UpdateWrittenWord(words.GetCompareBuffer());
+}
+
+void GameLogic::KeyVisual(char c)
+{
+	std::cout << "Key " << c << std::endl;
+	words.DoesCharMatch(c);
+	renderer->UpdateWrittenWord(words.GetCompareBuffer());
+}
+
+void GameLogic::ExitRequested()
+{
+	gameRunning = false;
 }
 
 int GameLogic::MainMenu()
@@ -53,16 +81,19 @@ int GameLogic::DictionarySelection()
 int GameLogic::MainGame()
 {
 	int ret = 0;
-	bool gameRunning = true;
 	size_t i = 0;
+	words.ReadFile("google-10000-english-usa.txt");
 	while (gameRunning)
 	{
 		renderer->DrawAllWords();
 		renderer->MoveAllWords(ToRight, 1);
 		i++;
-		if (i % 40 == 0)
+		if (i % 60 == 0)
 		{
-			std::string word = "word" + std::to_string(rand() % 999);
+			//std::string word = "word" + std::to_string(rand() % 999);
+			//words.AddWord(word);
+			//renderer->AddWord(word);
+			std::string &word = words.GetRandomWord();
 			words.AddWord(word);
 			renderer->AddWord(word);
 		}
@@ -79,12 +110,6 @@ int GameLogic::MainGame()
 			//}
 		}
 		int ret = input->ReadKey();
-		if (ret)
-		{
-			std::cout << "Key " << static_cast<char>(ret) << std::endl;
-			words.DoesCharMatch(static_cast<char>(ret));
-			renderer->UpdateWrittenWord(words.GetCompareBuffer());
-		}
 	}
 	return ret;
 }
@@ -117,4 +142,23 @@ void EventRouter::WordMovedOut(size_t idx)
 void EventRouter::WordTyped(size_t idx)
 {
 	gameLogic->WordTyped(idx);
+}
+
+void EventRouter::KeyEnter()
+{
+}
+
+void EventRouter::KeyBackspace()
+{
+	gameLogic->KeyBackspace();
+}
+
+void EventRouter::KeyVisual(char c)
+{
+	gameLogic->KeyVisual(c);
+}
+
+void EventRouter::ExitRequested()
+{
+	gameLogic->ExitRequested();
 }

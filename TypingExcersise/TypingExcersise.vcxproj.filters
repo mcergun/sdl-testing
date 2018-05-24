@@ -13,7 +13,7 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="fonts">
+    <Filter Include="Resource Files\fonts">
       <UniqueIdentifier>{2f3423ce-f923-451b-b880-f432c0f364c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -56,40 +56,45 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="fonts\FreeMono.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
     <Font Include="fonts\FreeMonoBold.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
     <Font Include="fonts\FreeMonoBoldOblique.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
     <Font Include="fonts\FreeMonoOblique.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
     <Font Include="fonts\FreeSans.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
     <Font Include="fonts\FreeSansBold.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
     <Font Include="fonts\FreeSansBoldOblique.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
     <Font Include="fonts\FreeSansOblique.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
     <Font Include="fonts\FreeSerif.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
     <Font Include="fonts\FreeSerifBold.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
     <Font Include="fonts\FreeSerifBoldItalic.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
     <Font Include="fonts\FreeSerifItalic.otf">
-      <Filter>fonts</Filter>
+      <Filter>Resource Files\fonts</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="google-10000-english-usa.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
