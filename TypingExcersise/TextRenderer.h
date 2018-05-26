@@ -13,6 +13,19 @@ enum MoveDirection
 	ToUp,
 };
 
+enum Color
+{
+	ColorRed,
+	ColorGreen,
+	ColorBlue,
+	ColorWhite,
+	ColorBlack,
+	ColorGray,
+	ColorCyan,
+	ColorMagenta,
+	ColorYellow,
+};
+
 class TextRenderer
 {
 public:
@@ -20,7 +33,8 @@ public:
 	virtual int Initialize() = 0;
 	virtual void Reset() = 0;
 	virtual void CloseWindow() = 0;
-	virtual	int AddWord(std::string text) = 0;
+	virtual	int AddWord(std::string text, Color color = ColorWhite) = 0;
+	virtual int AddWordAt(std::string text, int x, int y, Color color = ColorWhite) = 0;
 	virtual void MoveWord(size_t wordIdx, MoveDirection direction, int amount) = 0;
 	virtual void MoveAllWords(MoveDirection direction, int amount) = 0;
 	virtual void MoveWord(size_t wordIdx, int x, int y) = 0;

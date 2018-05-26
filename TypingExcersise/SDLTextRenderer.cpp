@@ -55,7 +55,6 @@ void SDLTextRenderer::Reset()
 	}
 	textures.clear();
 	textureSizes.clear();
-	textureLocs.clear();
 	totalCount = 0;
 }
 
@@ -65,12 +64,12 @@ void SDLTextRenderer::CloseWindow()
 	SDL_DestroyWindow(win);
 }
 
-int SDLTextRenderer::AddWord(std::string text)
+int SDLTextRenderer::AddWord(std::string text, Color color)
 {
 	if (!text.empty())
 	{
 		SDL_Texture *texture = CreateTexture(text);
-		SDL_Rect rect{ 0,0,0,0 };
+		SDL_Rect rect{ 0, 0, 0, 0 };
 		if (SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h) == 0)
 		{
 			if (screenCapacity == 0)
@@ -78,7 +77,7 @@ int SDLTextRenderer::AddWord(std::string text)
 				screenCapacity = winHeight / rect.h - 1;
 				typingPos.x = 100;
 				typingPos.y = screenCapacity * rect.h;
-				// set up route statuses
+				// Set up route statuses
 				textureRouteAvailablity.reserve(screenCapacity);
 				for (int i = 0; i < screenCapacity; ++i)
 				{
@@ -102,6 +101,19 @@ int SDLTextRenderer::AddWord(std::string text)
 		}
 	}
 	return 0;
+}
+
+int SDLTextRenderer::AddWordAt(std::string text, int y, int x, Color color)
+{
+	SDL_Texture *texture = CreateTexture(text);
+	SDL_Rect rect{ x, y, 0, 0 };
+	if (SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h) == 0)
+	{
+		textureSizes.push_back(rect);
+		textures.push_back(texture);
+	}
+	int ret = 0;
+	return ret;
 }
 
 void SDLTextRenderer::MoveWord(size_t wordIdx, MoveDirection direction, int amount)
@@ -188,15 +200,14 @@ void SDLTextRenderer::RemoveWordAtIdx(size_t idx)
 	}
 }
 
-SDL_Texture * SDLTextRenderer::CreateTexture(std::string text)
+SDL_Texture * SDLTextRenderer::CreateTexture(std::string text, Color color)
 {
-	SDL_Surface *surface = TTF_RenderText_Blended(font, text.c_str(),
-		SDL_Color{ 255, 255, 255, 255 });
+	SDL_Color c = ConvertColorToSDL(color);
+	SDL_Surface *surface = TTF_RenderText_Blended(font, text.c_str(), c);
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
 
 	return texture;
-
 }
 
 int SDLTextRenderer::DrawTexture(SDL_Texture *texture, SDL_Rect *rect, bool instant, bool clear)
@@ -266,4 +277,48 @@ int SDLTextRenderer::UpdateWrittenWord(std::string word)
 	typingTexture = CreateTexture(word);
 	SDL_QueryTexture(typingTexture, nullptr, nullptr, &typingPos.w, &typingPos.h);
 	return 0;
+}
+
+inline SDL_Color SDLTextRenderer::ConvertColorToSDL(Color color)
+{
+	SDL_Color ret{ 0, 0, 0, 0 };
+	switch (color)
+	{
+	case ColorRed:
+		ret.r = 255;
+		break;
+	case ColorGreen:
+		ret.g = 255;
+		break;
+	case ColorBlue:
+		ret.b = 255;
+		break;
+	case ColorWhite:
+		ret.r = 255;
+		ret.g = 255;
+		ret.b = 255;
+		break;
+	case ColorBlack:
+		break;
+	case ColorGray:
+		ret.r = 128;
+		ret.g = 128;
+		ret.b = 128;
+		break;
+	case ColorCyan:
+		ret.g = 255;
+		ret.b = 255;
+		break;
+	case ColorMagenta:
+		ret.r = 255;
+		ret.b = 255;
+		break;
+	case ColorYellow:
+		ret.r = 255;
+		ret.g = 255;
+		break;
+	default:
+		break;
+	}
+	return ret;
 }

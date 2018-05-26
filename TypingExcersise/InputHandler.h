@@ -5,6 +5,7 @@ typedef void(*KeyEnterEvent)();
 typedef void(*KeyBackspaceEvent)();
 typedef void(*KeyVisualEvent)(char);
 typedef void(*ExitEvent)();
+typedef void(*PauseEvent)();
 
 class InputHandler
 {
@@ -17,14 +18,22 @@ public:
 	{
 		enterPressed = func;
 	}
+
 	virtual void SetKeyBackspaceNotifier(KeyBackspaceEvent func)
 	{
 		backspacePressed = func;
 	}
+
 	virtual void SetKeyVisualNotifier(KeyVisualEvent func)
 	{
 		visualPressed = func;
 	}
+
+	virtual void SetPauseEventNotifier(PauseEvent func)
+	{
+		pauseRequested = func;
+	}
+
 	virtual void SetExitEventNotifier(ExitEvent func)
 	{
 		exitRequested = func;
@@ -34,6 +43,7 @@ protected:
 	KeyEnterEvent enterPressed = nullptr;
 	KeyBackspaceEvent backspacePressed = nullptr;
 	KeyVisualEvent visualPressed = nullptr;
+	PauseEvent pauseRequested = nullptr;
 	ExitEvent exitRequested = nullptr;
 };
 

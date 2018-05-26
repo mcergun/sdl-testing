@@ -16,22 +16,6 @@ int main(int argc, char **argv)
 {
 	using namespace std;
 
-	WordList list;
-	list.AddWord("word1");
-	list.AddWord("word2");
-	list.AddWord("word3");
-	cout << "Hello world!" << endl;
-	DEBUG_PRINT(list.DoesCharMatch('w'));
-	DEBUG_PRINT(list.DoesCharMatch('o'));
-	DEBUG_PRINT(list.DoesCharMatch('r'));
-	DEBUG_PRINT(list.DoesCharMatch('d'));
-	DEBUG_PRINT(list.DoesCharMatch('0'));
-	DEBUG_PRINT(list.DoesCharMatch('1'));
-	list.EraseLastCharacter().EraseLastCharacter();
-	DEBUG_PRINT(list.DoesCharMatch('1'));
-	list.EraseLastCharacter();
-	DEBUG_PRINT(list.DoesCharMatch('2'));
-
 	SDLTextRenderer renderer(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDLInputHandler input;
 	//renderer.Initialize();

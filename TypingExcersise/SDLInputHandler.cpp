@@ -40,6 +40,11 @@ int SDLInputHandler::ReadKey()
 				if (enterPressed)
 					enterPressed();
 				break;
+			case SDLK_ESCAPE:
+			case SDLK_PAUSE:
+				if (pauseRequested)
+					pauseRequested();
+				break;
 			default:
 				if (visualPressed)
 					visualPressed(e.key.keysym.sym);

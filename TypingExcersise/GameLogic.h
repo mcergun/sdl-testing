@@ -33,12 +33,14 @@ public:
 	void KeyEnter();
 	void KeyBackspace();
 	void KeyVisual(char c);
+	void PauseRequested();
 	void ExitRequested();
 private:
 	TextRenderer *renderer;
 	InputHandler *input;
 	WordList words;
 	std::mutex listMutex;
+	GameState state = StateMainMenu;
 	bool gameRunning = true;
 };
 
@@ -51,6 +53,7 @@ public:
 	static void KeyEnter();
 	static void KeyBackspace();
 	static void KeyVisual(char c);
+	static void PauseRequested();
 	static void ExitRequested();
 	static GameLogic *gameLogic;
 };

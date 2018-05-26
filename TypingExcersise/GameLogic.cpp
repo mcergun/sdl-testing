@@ -22,6 +22,7 @@ void GameLogic::SetInputHandler(InputHandler * newInput)
 		input->SetKeyEnterNotifier(EventRouter::KeyEnter);
 		input->SetKeyBackspaceNotifier(EventRouter::KeyBackspace);
 		input->SetKeyVisualNotifier(EventRouter::KeyVisual);
+		input->SetPauseEventNotifier(EventRouter::PauseRequested);
 		input->SetExitEventNotifier(EventRouter::ExitRequested);
 	}
 }
@@ -46,21 +47,32 @@ void GameLogic::WordTyped(size_t idx)
 
 void GameLogic::KeyEnter()
 {
+#ifdef _DEBUG
 	std::cout << "Enter Key" << std::endl;
+#endif
 }
 
 void GameLogic::KeyBackspace()
 {
+#ifdef _DEBUG
 	std::cout << "Backspace Key" << std::endl;
+#endif
 	words.EraseLastCharacter();
 	renderer->UpdateWrittenWord(words.GetCompareBuffer());
 }
 
 void GameLogic::KeyVisual(char c)
 {
+#ifdef _DEBUG
 	std::cout << "Key " << c << std::endl;
+#endif
 	words.DoesCharMatch(c);
 	renderer->UpdateWrittenWord(words.GetCompareBuffer());
+}
+
+void GameLogic::PauseRequested()
+{
+	gameRunning = false;
 }
 
 void GameLogic::ExitRequested()
@@ -124,6 +136,17 @@ GameLogic::~GameLogic()
 
 int GameLogic::GameLoop()
 {
+	switch (state)
+	{
+	case StateMainMenu:
+		break;
+	case StateDictionarySelection:
+		break;
+	case StateMainGame:
+		break;
+	default:
+		break;
+	}
 	return 0;
 }
 
@@ -154,6 +177,11 @@ void EventRouter::KeyBackspace()
 void EventRouter::KeyVisual(char c)
 {
 	gameLogic->KeyVisual(c);
+}
+
+void EventRouter::PauseRequested()
+{
+	gameLogic->PauseRequested();
 }
 
 void EventRouter::ExitRequested()
