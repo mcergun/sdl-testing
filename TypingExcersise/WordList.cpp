@@ -1,11 +1,13 @@
 #include <WordList.h>
 #include <fstream>
+#include <ctime>
 
 WordList::WordList()
 {
 	// reserve room for at least 10 words
 	activeWords.reserve(10);
 	wordMatches.reserve(10);
+	srand(time(NULL));
 }
 
 void WordList::ReadFile(std::string path)

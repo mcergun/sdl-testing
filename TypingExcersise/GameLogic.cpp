@@ -188,6 +188,7 @@ int GameLogic::MainGame()
 GameLogic::GameLogic()
 {
 	EventRouter::SetGameLogicPtr(this);
+	srand(time(NULL));
 }
 
 
