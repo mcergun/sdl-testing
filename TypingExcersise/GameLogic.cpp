@@ -2,6 +2,18 @@
 
 GameLogic *EventRouter::gameLogic = nullptr;
 
+void MenuState::IncrementIdx(int by)
+{
+	if (by + selectedIdx >= 0 && by + selectedIdx < 3)
+		selectedIdx += by;
+}
+
+void MenuState::DecrementIdx(int by)
+{
+	if (by - selectedIdx >= 0 && by - selectedIdx < 3)
+		selectedIdx -= by;
+}
+
 void GameLogic::SetRenderer(TextRenderer * newRenderer)
 {
 	if (newRenderer)
@@ -19,9 +31,10 @@ void GameLogic::SetInputHandler(InputHandler * newInput)
 	{
 		input = newInput;
 		input->Initialize();
-		input->SetKeyEnterNotifier(EventRouter::KeyEnter);
-		input->SetKeyBackspaceNotifier(EventRouter::KeyBackspace);
-		input->SetKeyVisualNotifier(EventRouter::KeyVisual);
+		input->SetEnterKeyNotifier(EventRouter::EnterKeyPressed);
+		input->SetBackspaceKeyNotifier(EventRouter::BackspaceKeyPressed);
+		input->SetArrowKeyNotifier(EventRouter::ArrowKeyPressed);
+		input->SetVisualKeyNotifier(EventRouter::VisualKeyPressed);
 		input->SetPauseEventNotifier(EventRouter::PauseRequested);
 		input->SetExitEventNotifier(EventRouter::ExitRequested);
 	}
@@ -45,7 +58,7 @@ void GameLogic::WordTyped(size_t idx)
 	renderer->RemoveWordAtIdx(idx);
 }
 
-void GameLogic::KeyEnter()
+void GameLogic::EnterKeyPressed()
 {
 #ifdef _DEBUG
 	std::cout << "Enter Key" << std::endl;
@@ -65,7 +78,7 @@ void GameLogic::KeyEnter()
 	}
 }
 
-void GameLogic::KeyBackspace()
+void GameLogic::BackspaceKeyPressed()
 {
 #ifdef _DEBUG
 	std::cout << "Backspace Key" << std::endl;
@@ -74,7 +87,41 @@ void GameLogic::KeyBackspace()
 	renderer->UpdateWrittenWord(words.GetCompareBuffer());
 }
 
-void GameLogic::KeyVisual(char c)
+void GameLogic::ArrowKeyPressed(ArrowKey arrow)
+{
+	switch (state)
+	{
+	case StateMainMenu:
+		switch (arrow)
+		{
+		case ArrowUp:
+			//menu.DecrementIdx();
+			//renderer->RemoveWordAtIdx(menu.selectedIdx);
+			//renderer->AddWordAt("Changed", 100, (menu.selectedIdx + 1) * 50, ColorYellow);
+			break;
+		case ArrowDown:
+			//menu.IncrementIdx();
+			//renderer->RemoveWordAtIdx(menu.selectedIdx);
+			//renderer->AddWordAt("Changed", 100, (menu.selectedIdx + 1) * 50, ColorYellow);
+			break;
+		case ArrowRight:
+			break;
+		case ArrowLeft:
+			break;
+		default:
+			break;
+		}
+		break;
+	case StateDictionarySelection:
+		break;
+	case StateMainGame:
+		break;
+	default:
+		break;
+	}
+}
+
+void GameLogic::VisualKeyPressed(char c)
 {
 #ifdef _DEBUG
 	std::cout << "Key " << c << std::endl;
@@ -186,19 +233,24 @@ void EventRouter::WordTyped(size_t idx)
 	gameLogic->WordTyped(idx);
 }
 
-void EventRouter::KeyEnter()
+void EventRouter::EnterKeyPressed()
 {
-	gameLogic->KeyEnter();
+	gameLogic->EnterKeyPressed();
 }
 
-void EventRouter::KeyBackspace()
+void EventRouter::BackspaceKeyPressed()
 {
-	gameLogic->KeyBackspace();
+	gameLogic->BackspaceKeyPressed();
 }
 
-void EventRouter::KeyVisual(char c)
+void EventRouter::ArrowKeyPressed(ArrowKey arrow)
 {
-	gameLogic->KeyVisual(c);
+	gameLogic->ArrowKeyPressed(arrow);
+}
+
+void EventRouter::VisualKeyPressed(char c)
+{
+	gameLogic->VisualKeyPressed(c);
 }
 
 void EventRouter::PauseRequested()

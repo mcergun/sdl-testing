@@ -17,6 +17,14 @@ enum GameState
 	StateMainGame,
 };
 
+struct MenuState
+{
+	int selectedIdx;
+
+	void IncrementIdx(int by = 1);
+	void DecrementIdx(int by = 1);
+};
+
 class GameLogic
 {
 public:
@@ -30,9 +38,10 @@ public:
 	void SetInputHandler(InputHandler *newInput);
 	void WordMovedOut(size_t idx);
 	void WordTyped(size_t idx);
-	void KeyEnter();
-	void KeyBackspace();
-	void KeyVisual(char c);
+	void EnterKeyPressed();
+	void BackspaceKeyPressed();
+	void ArrowKeyPressed(ArrowKey arrow);
+	void VisualKeyPressed(char c);
 	void PauseRequested();
 	void ExitRequested();
 private:
@@ -41,6 +50,7 @@ private:
 	WordList words;
 	std::mutex listMutex;
 	GameState state = StateMainMenu;
+	MenuState menu;
 	bool gameRunning = true;
 };
 
@@ -50,9 +60,10 @@ public:
 	static void SetGameLogicPtr(GameLogic * ptr);
 	static void WordMovedOut(size_t idx);
 	static void WordTyped(size_t idx);
-	static void KeyEnter();
-	static void KeyBackspace();
-	static void KeyVisual(char c);
+	static void EnterKeyPressed();
+	static void BackspaceKeyPressed();
+	static void ArrowKeyPressed(ArrowKey arrow);
+	static void VisualKeyPressed(char c);
 	static void PauseRequested();
 	static void ExitRequested();
 	static GameLogic *gameLogic;

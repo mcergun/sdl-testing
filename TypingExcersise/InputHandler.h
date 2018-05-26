@@ -1,11 +1,20 @@
 #ifndef _INPUT_HANDLER_H_
 #define _INPUT_HANDLER_H_
 
-typedef void(*KeyEnterEvent)();
-typedef void(*KeyBackspaceEvent)();
-typedef void(*KeyVisualEvent)(char);
+enum ArrowKey
+{
+	ArrowUp,
+	ArrowDown,
+	ArrowRight,
+	ArrowLeft,
+};
+
+typedef void(*EnterKeyEvent)();
+typedef void(*BackspaceKeyEvent)();
+typedef void(*VisualKeyEvent)(char);
 typedef void(*ExitEvent)();
 typedef void(*PauseEvent)();
+typedef void(*ArrowKeyEvent)(ArrowKey);
 
 class InputHandler
 {
@@ -14,17 +23,22 @@ public:
 	virtual int Initialize() = 0;
 	virtual int ReadKey() = 0;
 	virtual char KeyToVisualChar(int) = 0;
-	virtual void SetKeyEnterNotifier(KeyEnterEvent func)
+	virtual void SetEnterKeyNotifier(EnterKeyEvent func)
 	{
 		enterPressed = func;
 	}
 
-	virtual void SetKeyBackspaceNotifier(KeyBackspaceEvent func)
+	virtual void SetBackspaceKeyNotifier(BackspaceKeyEvent func)
 	{
 		backspacePressed = func;
 	}
 
-	virtual void SetKeyVisualNotifier(KeyVisualEvent func)
+	virtual void SetArrowKeyNotifier(ArrowKeyEvent func)
+	{
+		arrowKeyPressed = func;
+	}
+
+	virtual void SetVisualKeyNotifier(VisualKeyEvent func)
 	{
 		visualPressed = func;
 	}
@@ -39,10 +53,16 @@ public:
 		exitRequested = func;
 	}
 
+	virtual void SetKeyArrowNotifier(ArrowKeyEvent func)
+	{
+		arrowKeyPressed = func;
+	}
+
 protected:
-	KeyEnterEvent enterPressed = nullptr;
-	KeyBackspaceEvent backspacePressed = nullptr;
-	KeyVisualEvent visualPressed = nullptr;
+	EnterKeyEvent enterPressed = nullptr;
+	BackspaceKeyEvent backspacePressed = nullptr;
+	VisualKeyEvent visualPressed = nullptr;
+	ArrowKeyEvent arrowKeyPressed = nullptr;
 	PauseEvent pauseRequested = nullptr;
 	ExitEvent exitRequested = nullptr;
 };

@@ -40,6 +40,22 @@ int SDLInputHandler::ReadKey()
 				if (enterPressed)
 					enterPressed();
 				break;
+			case SDLK_UP:
+				if (arrowKeyPressed)
+					arrowKeyPressed(ArrowUp);
+				break;
+			case SDLK_DOWN:
+				if (arrowKeyPressed)
+					arrowKeyPressed(ArrowDown);
+				break;
+			case SDLK_RIGHT:
+				if (arrowKeyPressed)
+					arrowKeyPressed(ArrowRight);
+				break;
+			case SDLK_LEFT:
+				if (arrowKeyPressed)
+					arrowKeyPressed(ArrowLeft);
+				break;
 			case SDLK_ESCAPE:
 			case SDLK_PAUSE:
 				if (pauseRequested)
