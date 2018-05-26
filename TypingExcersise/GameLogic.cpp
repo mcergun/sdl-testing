@@ -50,6 +50,19 @@ void GameLogic::KeyEnter()
 #ifdef _DEBUG
 	std::cout << "Enter Key" << std::endl;
 #endif
+	switch (state)
+	{
+	case StateMainMenu:
+		renderer->Reset();
+		state = StateMainGame;
+		break;
+	case StateDictionarySelection:
+		break;
+	case StateMainGame:
+		break;
+	default:
+		break;
+	}
 }
 
 void GameLogic::KeyBackspace()
@@ -82,6 +95,24 @@ void GameLogic::ExitRequested()
 
 int GameLogic::MainMenu()
 {
+	int ret = 0;
+	static int menuState = 0;
+	switch (menuState)
+	{
+	case 0:
+		renderer->AddWordAt("Totally placeholder", 100, 50, ColorWhite);
+		renderer->AddWordAt("Start", 100, 100, ColorCyan);
+		renderer->AddWordAt("Options", 100, 150, ColorYellow);
+		renderer->AddWordAt("Select Dictionary", 100, 200, ColorMagenta);
+		renderer->AddWordAt("Exit", 100, 250, ColorGray);
+		menuState = 1;
+		break;
+	case 1:
+		ret = renderer->DrawAllWords();
+		ret |= input->ReadKey();
+	default:
+		break;
+	}
 	return 0;
 }
 
@@ -92,35 +123,18 @@ int GameLogic::DictionarySelection()
 
 int GameLogic::MainGame()
 {
-	int ret = 0;
-	size_t i = 0;
-	words.ReadFile("google-10000-english-usa.txt");
-	while (gameRunning)
+	static int ret = 0;
+	static size_t i = 0;
+	renderer->DrawAllWords();
+	renderer->MoveAllWords(ToRight, 1);
+	i++;
+	if (i % 80 == 0)
 	{
-		renderer->DrawAllWords();
-		renderer->MoveAllWords(ToRight, 1);
-		i++;
-		if (i % 80 == 0)
-		{
-			std::string &word = words.GetRandomWord();
-			words.AddWord(word);
-			renderer->AddWord(word);
-		}
-		if (i > 200)
-		{
-			//if (i % 32 == 1)
-			//{
-			//	if (words.GetWordCount() > 0)
-			//	{
-			//		size_t idx = rand() % (words.GetWordCount() / 2);
-			//		renderer->RemoveWordAtIdx(idx);
-			//		words.RemoveWordAtIdx(idx);
-			//	}
-			//}
-		}
-		int ret = input->ReadKey();
+		std::string &word = words.GetRandomWord();
+		words.AddWord(word);
+		renderer->AddWord(word);
 	}
-	renderer->CloseWindow();
+	ret = input->ReadKey();
 	return ret;
 }
 
@@ -136,17 +150,24 @@ GameLogic::~GameLogic()
 
 int GameLogic::GameLoop()
 {
-	switch (state)
+	words.ReadFile("google-10000-english-usa.txt");
+	while (gameRunning)
 	{
-	case StateMainMenu:
-		break;
-	case StateDictionarySelection:
-		break;
-	case StateMainGame:
-		break;
-	default:
-		break;
+		switch (state)
+		{
+		case StateMainMenu:
+			MainMenu();
+			break;
+		case StateDictionarySelection:
+			break;
+		case StateMainGame:
+			MainGame();
+			break;
+		default:
+			break;
+		}
 	}
+	renderer->CloseWindow();
 	return 0;
 }
 
@@ -167,6 +188,7 @@ void EventRouter::WordTyped(size_t idx)
 
 void EventRouter::KeyEnter()
 {
+	gameLogic->KeyEnter();
 }
 
 void EventRouter::KeyBackspace()

@@ -18,7 +18,7 @@ public:
 	void Reset();
 	void CloseWindow();
 	int AddWord(std::string text, Color color);
-	int AddWordAt(std::string text, int y, int x, Color color);
+	int AddWordAt(std::string text, int x, int y, Color color);
 	void MoveWord(size_t wordIdx, MoveDirection direction, int amount);
 	void MoveAllWords(MoveDirection direction, int amount);
 	void MoveWord(size_t wordIdx, int x, int y);

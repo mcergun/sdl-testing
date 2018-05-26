@@ -24,11 +24,7 @@ int main(int argc, char **argv)
 	game.SetRenderer(&renderer);
 	game.SetInputHandler(&input);
 
-	game.MainGame();
-
-	SDL_Delay(2000);
-
-	cin.get();
+	game.GameLoop();
 
 	return 0;
 }

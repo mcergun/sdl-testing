@@ -103,9 +103,9 @@ int SDLTextRenderer::AddWord(std::string text, Color color)
 	return 0;
 }
 
-int SDLTextRenderer::AddWordAt(std::string text, int y, int x, Color color)
+int SDLTextRenderer::AddWordAt(std::string text, int x, int y, Color color)
 {
-	SDL_Texture *texture = CreateTexture(text);
+	SDL_Texture *texture = CreateTexture(text, color);
 	SDL_Rect rect{ x, y, 0, 0 };
 	if (SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h) == 0)
 	{
