@@ -255,7 +255,7 @@ inline bool SDLTextRenderer::IsRouteClear(size_t wayIdx)
 int SDLTextRenderer::DrawAllWords()
 {
 	int ret = -1;
-	if (textures.size() > 0)
+	if (textures.size() > 1)
 	{
 		ret = DrawTexture(textures[0], &textureSizes[0], false, true);
 		for (size_t i = 1; i < textures.size() - 1; ++i)
@@ -263,6 +263,11 @@ int SDLTextRenderer::DrawAllWords()
 			ret |= DrawTexture(textures[i], &textureSizes[i]);
 		}
 		ret |= DrawTexture(textures[textures.size() - 1], &textureSizes[textures.size() - 1], true);
+		SDL_Delay(1);
+	}
+	else if (textures.size() == 1)
+	{
+		ret = DrawTexture(textures[0], &textureSizes[0], true, true);
 		SDL_Delay(1);
 	}
 	return ret;
