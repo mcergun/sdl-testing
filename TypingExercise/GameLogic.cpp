@@ -42,8 +42,23 @@ void GameLogic::SetInputHandler(InputHandler * newInput)
 
 void GameLogic::WordMovedOut(size_t idx)
 {
+	size_t wordLen = words.activeWords[idx].length();
+	if (wordLen < 4)
+	{
+		gameScore -= (wordLen * 1.5);
+	}
+	else if (wordLen < 8)
+	{
+		gameScore -= wordLen;
+	}
+	else
+	{
+		gameScore -= (wordLen * 0.5);
+	}
+	renderer->UpdateScore(gameScore);
 #ifdef _DEBUG
-	std::cout << "Removed word is " << words.activeWords[idx] << std::endl;
+	std::cout << "Removed word is " << words.activeWords[idx] <<
+		", Score = " << gameScore << std::endl;
 #endif
 	words.RemoveWordAtIdx(idx);
 	renderer->RemoveWordAtIdx(idx);
@@ -51,8 +66,23 @@ void GameLogic::WordMovedOut(size_t idx)
 
 void GameLogic::WordTyped(size_t idx)
 {
+	size_t wordLen = words.activeWords[idx].length();
+	if (wordLen < 4)
+	{
+		gameScore += (wordLen * 0.5);
+	}
+	else if (wordLen < 8)
+	{
+		gameScore += wordLen;
+	}
+	else
+	{
+		gameScore += (wordLen * 1.5);
+	}
+	renderer->UpdateScore(gameScore);
 #ifdef _DEBUG
-	std::cout << "Typed word is " << words.activeWords[idx] << std::endl;
+	std::cout << "Typed word is " << words.activeWords[idx] <<
+		", Score = " << gameScore << std::endl;
 #endif
 	words.RemoveWordAtIdx(idx);
 	renderer->RemoveWordAtIdx(idx);
@@ -84,7 +114,7 @@ void GameLogic::BackspaceKeyPressed()
 	std::cout << "Backspace Key" << std::endl;
 #endif
 	words.EraseLastCharacter();
-	renderer->UpdateWrittenWord(words.GetCompareBuffer());
+	renderer->UpdateWrittenWord("=>  " + words.GetCompareBuffer());
 }
 
 void GameLogic::ArrowKeyPressed(ArrowKey arrow)
@@ -127,7 +157,7 @@ void GameLogic::VisualKeyPressed(char c)
 	std::cout << "Key " << c << std::endl;
 #endif
 	words.DoesCharMatch(c);
-	renderer->UpdateWrittenWord(words.GetCompareBuffer());
+	renderer->UpdateWrittenWord("=>  " + words.GetCompareBuffer());
 }
 
 void GameLogic::PauseRequested()

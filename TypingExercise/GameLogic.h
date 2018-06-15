@@ -52,6 +52,7 @@ private:
 	GameState state = StateMainMenu;
 	MenuState menu;
 	bool gameRunning = true;
+	int gameScore = 0;
 };
 
 class EventRouter

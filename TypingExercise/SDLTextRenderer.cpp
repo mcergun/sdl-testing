@@ -74,9 +74,11 @@ int SDLTextRenderer::AddWord(std::string text, Color color)
 		{
 			if (screenCapacity == 0)
 			{
-				screenCapacity = winHeight / rect.h - 1;
-				typingPos.x = 100;
-				typingPos.y = screenCapacity * rect.h;
+				screenCapacity = winHeight / rect.h - 2;
+				typingPos.x = 10;
+				typingPos.y = (screenCapacity + 1) * rect.h;
+				scorePos.x = winWidth - 20;
+				scorePos.y = (screenCapacity + 1) * rect.h;
 				// Set up route statuses
 				textureRouteAvailablity.reserve(screenCapacity);
 				for (int i = 0; i < screenCapacity; ++i)
@@ -221,6 +223,7 @@ int SDLTextRenderer::DrawTexture(SDL_Texture *texture, SDL_Rect *rect, bool inst
 		if (instant)
 		{
 			ret |= SDL_RenderCopy(renderer, typingTexture, nullptr, &typingPos);
+			ret |= SDL_RenderCopy(renderer, scoreTexture, nullptr, &scorePos);
 			SDL_RenderPresent(renderer);
 		}
 	}
@@ -271,6 +274,21 @@ int SDLTextRenderer::DrawAllWords()
 		SDL_Delay(1);
 	}
 	return ret;
+}
+
+int SDLTextRenderer::UpdateScore(int newScore)
+{
+	if (scoreTexture != NULL)
+	{
+		SDL_DestroyTexture(scoreTexture);
+	}
+	scoreTexture = CreateTexture("Score: " + std::to_string(newScore));
+	SDL_QueryTexture(scoreTexture, nullptr, nullptr, &scorePos.w, &scorePos.h);
+	if (scorePos.x + scorePos.w + 10 != winWidth)
+	{
+		scorePos.x = winWidth - scorePos.w - 10;
+	}
+	return 0;
 }
 
 int SDLTextRenderer::UpdateWrittenWord(std::string word)

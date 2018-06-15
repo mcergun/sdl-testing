@@ -25,6 +25,7 @@ public:
 	void MoveAllWords(int x, int y);
 	void RemoveWordAtIdx(size_t idx);
 	int DrawAllWords();
+	int UpdateScore(int newScore);
 	int UpdateWrittenWord(std::string word);
 
 	static SDL_Color ConvertColorToSDL(Color color);
@@ -41,7 +42,9 @@ private:
 	std::string fontPath = "./fonts/FreeMono.otf";
 	std::mutex *listMutex = nullptr;
 	SDL_Texture *typingTexture;
+	SDL_Texture *scoreTexture;
 	SDL_Rect typingPos;
+	SDL_Rect scorePos;
 
 	// Keeps textures of the words fed to the system
 	std::vector<SDL_Texture *> textures;
