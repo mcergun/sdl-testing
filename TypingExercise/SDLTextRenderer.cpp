@@ -74,11 +74,8 @@ int SDLTextRenderer::AddWord(std::string text, Color color)
 		{
 			if (screenCapacity == 0)
 			{
-				screenCapacity = winHeight / rect.h - 2;
-				typingPos.x = 10;
-				typingPos.y = (screenCapacity + 1) * rect.h;
-				scorePos.x = winWidth - 20;
-				scorePos.y = (screenCapacity + 1) * rect.h;
+				CalculateSizeParameters(rect);
+				UpdateScore(0);
 				// Set up route statuses
 				textureRouteAvailablity.reserve(screenCapacity);
 				for (int i = 0; i < screenCapacity; ++i)
@@ -253,6 +250,15 @@ bool SDLTextRenderer::IsRectOutOfBounds(SDL_Rect * rect)
 inline bool SDLTextRenderer::IsRouteClear(size_t wayIdx)
 {
 	return false;
+}
+
+void SDLTextRenderer::CalculateSizeParameters(SDL_Rect &rect)
+{
+	screenCapacity = winHeight / rect.h - 2;
+	typingPos.x = 10;
+	typingPos.y = (screenCapacity + 1) * rect.h;
+	scorePos.x = winWidth - 20;
+	scorePos.y = (screenCapacity + 1) * rect.h;
 }
 
 int SDLTextRenderer::DrawAllWords()

@@ -36,6 +36,8 @@ private:
 	int DrawSurface(SDL_Surface *surface, SDL_Rect *rect, bool instant = false, bool clear = false);
 	inline bool IsRectOutOfBounds(SDL_Rect *rect);
 	inline bool IsRouteClear(size_t wayIdx);
+	void CalculateSizeParameters(SDL_Rect &rect);
+
 	SDL_Renderer *renderer = nullptr;
 	SDL_Window *win = nullptr;
 	TTF_Font *font = nullptr;

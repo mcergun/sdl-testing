@@ -53,6 +53,8 @@ private:
 	MenuState menu;
 	bool gameRunning = true;
 	int gameScore = 0;
+
+	int CalculateScoreChange(int wordLen, bool isGain);
 };
 
 class EventRouter

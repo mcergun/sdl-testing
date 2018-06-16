@@ -43,18 +43,7 @@ void GameLogic::SetInputHandler(InputHandler * newInput)
 void GameLogic::WordMovedOut(size_t idx)
 {
 	size_t wordLen = words.activeWords[idx].length();
-	if (wordLen < 4)
-	{
-		gameScore -= (wordLen * 1.5);
-	}
-	else if (wordLen < 8)
-	{
-		gameScore -= wordLen;
-	}
-	else
-	{
-		gameScore -= (wordLen * 0.5);
-	}
+	gameScore += CalculateScoreChange(wordLen, false);
 	renderer->UpdateScore(gameScore);
 #ifdef _DEBUG
 	std::cout << "Removed word is " << words.activeWords[idx] <<
@@ -67,18 +56,7 @@ void GameLogic::WordMovedOut(size_t idx)
 void GameLogic::WordTyped(size_t idx)
 {
 	size_t wordLen = words.activeWords[idx].length();
-	if (wordLen < 4)
-	{
-		gameScore += (wordLen * 0.5);
-	}
-	else if (wordLen < 8)
-	{
-		gameScore += wordLen;
-	}
-	else
-	{
-		gameScore += (wordLen * 1.5);
-	}
+	gameScore += CalculateScoreChange(wordLen, true);
 	renderer->UpdateScore(gameScore);
 #ifdef _DEBUG
 	std::cout << "Typed word is " << words.activeWords[idx] <<
@@ -168,6 +146,34 @@ void GameLogic::PauseRequested()
 void GameLogic::ExitRequested()
 {
 	gameRunning = false;
+}
+
+int GameLogic::CalculateScoreChange(int wordLen, bool isGain)
+{
+	int ret = 0;
+	if (isGain)
+	{
+		if (wordLen < 6)
+		{
+			ret = 1;
+		}
+		else
+		{
+			ret = wordLen / 2;
+		}
+	}
+	else
+	{
+		if (wordLen < 6)
+		{
+			ret = (wordLen - 6) * 2;
+		}
+		else
+		{
+			ret = -(wordLen / 2);
+		}
+	}
+	return ret;
 }
 
 int GameLogic::MainMenu()
