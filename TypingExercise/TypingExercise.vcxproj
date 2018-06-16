@@ -158,7 +158,7 @@
     <Font Include="fonts\FreeSerifItalic.otf" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="google-10000-english-usa.txt" />
+    <Text Include="google-10000-english-usa-no-swears.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
