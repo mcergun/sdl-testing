@@ -234,7 +234,7 @@ GameLogic::~GameLogic()
 
 int GameLogic::GameLoop()
 {
-	words.ReadFile("google-10000-english-usa.txt");
+	words.ReadFile("google-10000-english-usa-no-swears.txt");
 	while (gameRunning)
 	{
 		switch (state)
