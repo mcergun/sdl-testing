@@ -29,6 +29,7 @@ enum Color
 class TextRenderer
 {
 public:
+	TextRenderer(std::string path, unsigned int size) : fontPath(path), fontSize(size) {}
 	virtual ~TextRenderer() {};
 	virtual int Initialize() = 0;
 	virtual void Reset() = 0;
@@ -50,6 +51,8 @@ public:
 
 protected:
 	WordOutOfBoundsEvent wordOutOfBounds = nullptr;
+	std::string fontPath = "";
+	unsigned int fontSize = 24;
 };
 
 

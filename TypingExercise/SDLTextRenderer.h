@@ -11,8 +11,8 @@
 class SDLTextRenderer : public TextRenderer
 {
 public:
-	SDLTextRenderer();
-	SDLTextRenderer(int flags);
+	SDLTextRenderer(std::string path, unsigned int size);
+	SDLTextRenderer(std::string path, unsigned int size, int flags);
 	~SDLTextRenderer();
 	int Initialize();
 	void Reset();
@@ -31,6 +31,7 @@ public:
 	static SDL_Color ConvertColorToSDL(Color color);
 
 private:
+	SDLTextRenderer();
 	SDL_Texture * CreateTexture(std::string text, Color color = ColorWhite);
 	int DrawTexture(SDL_Texture *texture, SDL_Rect *rect, bool instant = false, bool clear = false);
 	int DrawSurface(SDL_Surface *surface, SDL_Rect *rect, bool instant = false, bool clear = false);
@@ -41,7 +42,6 @@ private:
 	SDL_Renderer *renderer = nullptr;
 	SDL_Window *win = nullptr;
 	TTF_Font *font = nullptr;
-	std::string fontPath = "./fonts/FreeMono.otf";
 	std::mutex *listMutex = nullptr;
 	SDL_Texture *typingTexture;
 	SDL_Texture *scoreTexture;
@@ -63,6 +63,5 @@ private:
 	// TODO: Make following variables editable at run-time
 	const int winWidth = 800;
 	const int winHeight = 600;
-	int fontHeight = 24;
 };
 #endif

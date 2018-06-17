@@ -158,7 +158,13 @@
     <Font Include="fonts\FreeSerifItalic.otf" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="google-10000-english-usa-no-swears.txt" />
+    <Text Include="google-10000-english-usa-no-swears.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Text>
+    <Text Include="settings.txt">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

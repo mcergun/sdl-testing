@@ -1,12 +1,13 @@
 #include "SDLTextRenderer.h"
 
-SDLTextRenderer::SDLTextRenderer()
+SDLTextRenderer::SDLTextRenderer(std::string path, unsigned int size) :
+	TextRenderer(path, size)
 {
 
 }
 
-SDLTextRenderer::SDLTextRenderer(int flags) :
-	flags(flags)
+SDLTextRenderer::SDLTextRenderer(std::string path, unsigned int size, int flags) :
+	TextRenderer(path, size), flags(flags)
 {
 }
 
@@ -38,7 +39,7 @@ int SDLTextRenderer::Initialize()
 	if (!TTF_WasInit())
 	{
 		ret |= TTF_Init();
-		font = TTF_OpenFont(fontPath.c_str(), fontHeight);
+		font = TTF_OpenFont(fontPath.c_str(), fontSize);
 		ret |= !font;
 	}
 	ret |= !(wordOutOfBounds);
