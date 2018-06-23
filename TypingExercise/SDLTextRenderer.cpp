@@ -29,7 +29,13 @@ int SDLTextRenderer::Initialize()
 	int ret = 0;
 	if (!(SDL_WasInit(SDL_INIT_EVERYTHING) & SDL_INIT_EVERYTHING))
 	{
+		SDL_DisplayMode dm;
+		memset(&dm, 0, sizeof(dm));
 		ret |= SDL_Init(SDL_INIT_EVERYTHING);
+		ret |= SDL_GetCurrentDisplayMode(0, &dm);
+		auto asd = SDL_GetError();
+		winWidth = dm.w / 2;
+		winHeight = dm.h / 2;
 		win = SDL_CreateWindow("Main Window", SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
 		ret |= !win;
@@ -38,6 +44,14 @@ int SDLTextRenderer::Initialize()
 	}
 	if (!TTF_WasInit())
 	{
+		if (winHeight > 900)
+		{
+			fontSize = fontSize * 2;
+		}
+		else if (winHeight > 600)
+		{
+			fontSize = fontSize * 1.5;
+		}
 		ret |= TTF_Init();
 		font = TTF_OpenFont(fontPath.c_str(), fontSize);
 		ret |= !font;

@@ -61,7 +61,7 @@ private:
 	size_t screenCapacity = 0;
 	int flags;
 	// TODO: Make following variables editable at run-time
-	const int winWidth = 800;
-	const int winHeight = 600;
+	int winWidth = 800;
+	int winHeight = 600;
 };
 #endif
