@@ -8,6 +8,13 @@
 #include <SDL_ttf.h>
 #include <TextRenderer.h>
 
+struct WordTexture
+{
+	SDL_Texture *texture;
+	SDL_Rect size;
+	size_t usedRoute;
+};
+
 class SDLTextRenderer : public TextRenderer
 {
 public:
@@ -48,12 +55,7 @@ private:
 	SDL_Rect typingPos;
 	SDL_Rect scorePos;
 
-	// Keeps textures of the words fed to the system
-	std::vector<SDL_Texture *> textures;
-	// Keeps sizes and locations of the textures
-	std::vector<SDL_Rect> textureSizes;
-	// Keeps routes used by each texture, this is used to free the way
-	std::vector<size_t> textureUsedRoutes;
+	std::vector<WordTexture> words;
 	// Keeps routes' status as available or not, used to spawn textures at
 	// pseudo-random locations
 	std::vector<bool> textureRouteAvailablity;
