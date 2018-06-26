@@ -48,25 +48,49 @@ WordList & WordList::AddWord(std::string word)
 	return *this;
 }
 
-bool WordList::DoesCharMatch(const char c)
+size_t WordList::GetMatchingIdx(const char c)
 {
 	bool foundInList = false;
 	compareBuf[bufIdx++] = c;
+	size_t pos = -1;
+	size_t smallestSize = -1;
 	for (size_t i = 0; i < activeWords.size(); ++i)
 	{
-		wordMatches[i] = activeWords[i].find(compareBuf) == 0;
-		foundInList |= wordMatches[i];
-		if (wordMatches[i] && activeWords[i].length() == bufIdx)
+		if (activeWords[i].find(compareBuf) == 0)
 		{
-			// a full word is typed
-			if (wordTyped)
-				wordTyped(i);
-			memset(compareBuf, 0, bufIdx);
-			bufIdx = 0;
-			break;
+			size_t wordLen = activeWords[i].length();
+			if (wordLen == bufIdx)
+			{
+				// word fully matches
+				if (wordTyped)
+					wordTyped(i);
+				memset(compareBuf, 0, bufIdx);
+				bufIdx = 0;
+				break;
+			}
+			if (wordLen < smallestSize)
+			{
+				smallestSize = wordLen;
+				pos = i;
+			}
 		}
 	}
-	return foundInList;
+	return pos;
+	//for (size_t i = 0; i < activeWords.size(); ++i)
+	//{
+	//	wordMatches[i] = activeWords[i].find(compareBuf) == 0;
+	//	foundInList |= wordMatches[i];
+	//	if (wordMatches[i] && activeWords[i].length() == bufIdx)
+	//	{
+	//		// a full word is typed
+	//		if (wordTyped)
+	//			wordTyped(i);
+	//		memset(compareBuf, 0, bufIdx);
+	//		bufIdx = 0;
+	//		break;
+	//	}
+	//}
+	//return foundInList;
 }
 
 WordList & WordList::EraseLastCharacter()
