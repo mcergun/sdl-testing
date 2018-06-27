@@ -173,6 +173,26 @@ void SDLTextRenderer::MoveAllWords(MoveDirection direction, int amount)
 	{
 		MoveWord(i, direction, amount);
 	}
+	if (overlay.texture)
+	{
+		switch (direction)
+		{
+		case ToLeft:
+			overlay.size.x -= amount;
+			break;
+		case ToRight:
+			overlay.size.x += amount;
+			break;
+		case ToDown:
+			overlay.size.x -= amount;
+			break;
+		case ToUp:
+			overlay.size.y += amount;
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void SDLTextRenderer::MoveWord(size_t wordIdx, int x, int y)
@@ -280,6 +300,8 @@ int SDLTextRenderer::DrawAllWords()
 		{
 			ret |= DrawTexture(words[i].texture, &words[i].size);
 		}
+		if (overlay.texture != nullptr)
+			ret |= DrawTexture(overlay.texture, &overlay.size);
 		ret |= DrawTexture(words[words.size() - 1].texture, &words[words.size() - 1].size, true);
 		SDL_Delay(1);
 	}
@@ -314,6 +336,23 @@ int SDLTextRenderer::UpdateWrittenWord(std::string word)
 	}
 	typingTexture = CreateTexture(word);
 	SDL_QueryTexture(typingTexture, nullptr, nullptr, &typingPos.w, &typingPos.h);
+	return 0;
+}
+
+int SDLTextRenderer::UpdateWordOverlay(size_t underIdx, std::string typedWord)
+{
+	if (overlay.texture != nullptr)
+	{
+		SDL_DestroyTexture(overlay.texture);
+		overlay.texture = nullptr;
+	}
+	if (underIdx != -1)
+	{
+		overlay.texture = CreateTexture(typedWord, ColorRed);
+		SDL_QueryTexture(overlay.texture, nullptr, nullptr, &overlay.size.w, &overlay.size.h);
+		overlay.size.x = words[underIdx].size.x;
+		overlay.size.y = words[underIdx].size.y;
+	}
 	return 0;
 }
 

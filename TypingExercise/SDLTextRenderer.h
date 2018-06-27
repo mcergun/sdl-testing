@@ -34,7 +34,7 @@ public:
 	int DrawAllWords();
 	int UpdateScore(int newScore);
 	int UpdateWrittenWord(std::string word);
-
+	int UpdateWordOverlay(size_t underIdx, std::string typedWord);
 	static SDL_Color ConvertColorToSDL(Color color);
 
 private:
@@ -56,6 +56,7 @@ private:
 	SDL_Rect scorePos;
 
 	std::vector<WordTexture> words;
+	WordTexture overlay;
 	// Keeps routes' status as available or not, used to spawn textures at
 	// pseudo-random locations
 	std::vector<bool> textureRouteAvailablity;

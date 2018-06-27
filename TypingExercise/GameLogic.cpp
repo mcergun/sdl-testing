@@ -135,12 +135,10 @@ void GameLogic::VisualKeyPressed(char c)
 	std::cout << "Key " << c << std::endl;
 #endif
 	size_t ret = words.GetMatchingIdx(c);
-	if (ret != -1)
-	{
 #ifdef _DEBUG
 		std::cout << "Most match " << ret << std::endl;
 #endif
-	}
+	renderer->UpdateWordOverlay(ret, words.GetCompareBuffer());
 	renderer->UpdateWrittenWord("=>  " + words.GetCompareBuffer());
 }
 
