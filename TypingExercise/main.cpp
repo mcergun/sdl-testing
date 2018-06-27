@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 	int flags = DEF_FLAGS;
 
 	ifstream settings;
-	settings.open("C:\\Users\\mert\\Documents\\Visual Studio 2017\\Projects\\TypingExercise\\x64\\Debug\\settings.txt", ifstream::in);
+	settings.open("settings.txt", ifstream::in);
 	if (settings.is_open())
 	{
 		char line[1024];
