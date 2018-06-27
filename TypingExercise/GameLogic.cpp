@@ -77,7 +77,7 @@ void GameLogic::EnterKeyPressed()
 	case StateMainMenu:
 		renderer->Reset();
 		state = StateMainGame;
-		KpmCalculator::StartTimer(&keysTyped);
+		//KpmCalculator::StartTimer(&keysTyped);
 		break;
 	case StateDictionarySelection:
 		break;
@@ -309,7 +309,7 @@ void EventRouter::ExitRequested()
 SDL_TimerID KpmCalculator::timerId = 0;
 int KpmCalculator::lastScore = 0;
 bool KpmCalculator::timerRunning = false;
-
+Uint32 KpmCalculator::secondsPassed = 0;
 
 bool KpmCalculator::StartTimer(void *curScorePtr)
 {
@@ -329,10 +329,12 @@ bool KpmCalculator::StopTimer()
 Uint32 KpmCalculator::KpmCallback(Uint32 interval, void * params)
 {
 	Uint32 ret = 0;
-	lastScore = *(reinterpret_cast<int *>(params));
+	secondsPassed++;
+	int curScore = *(reinterpret_cast<int *>(params));
 #ifdef _DEBUG
-	std::cout << "Score " << lastScore << std::endl;
+	std::cout << "Score " << curScore - lastScore << std::endl;
 #endif
+	lastScore = curScore;
 	if (timerRunning)
 		ret = interval;
 	return ret;

@@ -36,6 +36,7 @@ public:
 	static SDL_TimerID timerId;
 	static int lastScore;
 	static bool timerRunning;
+	static Uint32 secondsPassed;
 };
 
 class GameLogic
