@@ -4,6 +4,8 @@
 #include <mutex>
 #include <TextRenderer.h>
 #include <InputHandler.h>
+// Maybe move this into another class to get free of SDL dependency in this class
+#include <SDL_timer.h>
 #include <WordList.h>
 
 #ifdef _DEBUG
@@ -23,6 +25,17 @@ struct MenuState
 
 	void IncrementIdx(int by = 1);
 	void DecrementIdx(int by = 1);
+};
+
+class KpmCalculator
+{
+public:
+	static bool StartTimer(void *curScorePtr);
+	static bool StopTimer();
+	static Uint32 KpmCallback(Uint32 interval, void *params);
+	static SDL_TimerID timerId;
+	static int lastScore;
+	static bool timerRunning;
 };
 
 class GameLogic
@@ -53,6 +66,8 @@ private:
 	MenuState menu;
 	bool gameRunning = true;
 	int gameScore = 0;
+	int wordSpawnRate = 100;
+	int keysTyped = 0;
 
 	int CalculateScoreChange(int wordLen, bool isGain);
 };

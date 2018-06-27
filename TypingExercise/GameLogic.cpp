@@ -58,6 +58,7 @@ void GameLogic::WordTyped(size_t idx)
 	size_t wordLen = words.activeWords[idx].length();
 	gameScore += CalculateScoreChange(wordLen, true);
 	renderer->UpdateScore(gameScore);
+	keysTyped += wordLen;
 #ifdef _DEBUG
 	std::cout << "Typed word is " << words.activeWords[idx] <<
 		", Score = " << gameScore << std::endl;
@@ -76,6 +77,7 @@ void GameLogic::EnterKeyPressed()
 	case StateMainMenu:
 		renderer->Reset();
 		state = StateMainGame;
+		KpmCalculator::StartTimer(&keysTyped);
 		break;
 	case StateDictionarySelection:
 		break;
@@ -215,7 +217,7 @@ int GameLogic::MainGame()
 	renderer->DrawAllWords();
 	renderer->MoveAllWords(ToRight, 1);
 	i++;
-	if (i % 80 == 0)
+	if (i % wordSpawnRate == 0)
 	{
 		std::string &word = words.GetRandomWord();
 		words.AddWord(word);
@@ -302,4 +304,36 @@ void EventRouter::PauseRequested()
 void EventRouter::ExitRequested()
 {
 	gameLogic->ExitRequested();
+}
+
+SDL_TimerID KpmCalculator::timerId = 0;
+int KpmCalculator::lastScore = 0;
+bool KpmCalculator::timerRunning = false;
+
+
+bool KpmCalculator::StartTimer(void *curScorePtr)
+{
+	timerRunning = true;
+	timerId = SDL_AddTimer(1000, &KpmCalculator::KpmCallback, curScorePtr);
+	return (timerId != 0);
+}
+
+bool KpmCalculator::StopTimer()
+{
+	timerRunning = false;
+	SDL_RemoveTimer(timerId);
+	timerId = 0;
+	return timerRunning;
+}
+
+Uint32 KpmCalculator::KpmCallback(Uint32 interval, void * params)
+{
+	Uint32 ret = 0;
+	lastScore = *(reinterpret_cast<int *>(params));
+#ifdef _DEBUG
+	std::cout << "Score " << lastScore << std::endl;
+#endif
+	if (timerRunning)
+		ret = interval;
+	return ret;
 }
