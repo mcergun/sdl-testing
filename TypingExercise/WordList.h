@@ -21,6 +21,7 @@ public:
 	size_t GetWordCount() const;
 	void RemoveWordAtIdx(size_t idx);
 	std::string GetCompareBuffer();
+	char GetLastCharacter();
 
 	std::vector<std::string> activeWords = std::vector<std::string>();
 private:

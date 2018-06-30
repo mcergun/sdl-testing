@@ -120,3 +120,8 @@ std::string WordList::GetCompareBuffer()
 {
 	return std::string(compareBuf);
 }
+
+char WordList::GetLastCharacter()
+{
+	return compareBuf[bufIdx - 1];
+}
