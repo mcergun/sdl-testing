@@ -48,10 +48,15 @@ WordList & WordList::AddWord(std::string word)
 	return *this;
 }
 
-size_t WordList::GetMatchingIdx(const char c)
+size_t WordList::InsertCharacter(const char c)
+{
+	compareBuf[bufIdx++] = c;
+	return bufIdx;
+}
+
+size_t WordList::GetMatchingIdx()
 {
 	bool foundInList = false;
-	compareBuf[bufIdx++] = c;
 	size_t pos = -1;
 	size_t smallestSize = -1;
 	for (size_t i = 0; i < activeWords.size(); ++i)

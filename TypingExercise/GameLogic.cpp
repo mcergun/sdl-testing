@@ -94,9 +94,7 @@ void GameLogic::BackspaceKeyPressed()
 	std::cout << "Backspace Key" << std::endl;
 #endif
 	words.EraseLastCharacter();
-	char lastChar = words.GetLastCharacter();
-	words.EraseLastCharacter();
-	size_t ret = words.GetMatchingIdx(lastChar);
+	size_t ret = words.GetMatchingIdx();
 #ifdef _DEBUG
 	std::cout << "Most match " << ret << std::endl;
 #endif
@@ -143,7 +141,8 @@ void GameLogic::VisualKeyPressed(char c)
 #ifdef _DEBUG
 	std::cout << "Key " << c << std::endl;
 #endif
-	size_t ret = words.GetMatchingIdx(c);
+	words.InsertCharacter(c);
+	size_t ret = words.GetMatchingIdx();
 #ifdef _DEBUG
 		std::cout << "Most match " << ret << std::endl;
 #endif

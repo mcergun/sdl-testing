@@ -16,7 +16,8 @@ public:
 	void SetMutex(std::mutex *mtx);
 	std::string GetRandomWord();
 	WordList & AddWord(std::string word);
-	size_t GetMatchingIdx(const char c);
+	size_t InsertCharacter(const char c);
+	size_t GetMatchingIdx();
 	WordList & EraseLastCharacter();
 	size_t GetWordCount() const;
 	void RemoveWordAtIdx(size_t idx);
