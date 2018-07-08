@@ -3,13 +3,19 @@
 
 #include <vector>
 #include <string>
-#include <mutex>
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <TextRenderer.h>
-
+#include <iostream>
 struct WordTexture
 {
+	~WordTexture()
+	{
+		std::cout << "~WordTexture()" << std::endl;
+		if (texture)
+			SDL_DestroyTexture(texture);
+	}
+
 	SDL_Texture *texture;
 	SDL_Rect size;
 	size_t usedRoute;
@@ -45,17 +51,17 @@ private:
 	inline bool IsRectOutOfBounds(SDL_Rect *rect);
 	inline bool IsRouteClear(size_t wayIdx);
 	void CalculateSizeParameters(SDL_Rect &rect);
+	void DestroyTexture(SDL_Texture *text);
 
 	SDL_Renderer *renderer = nullptr;
 	SDL_Window *win = nullptr;
 	TTF_Font *font = nullptr;
-	std::mutex *listMutex = nullptr;
-	SDL_Texture *typingTexture;
-	SDL_Texture *scoreTexture;
+	SDL_Texture *typingTexture = nullptr;
+	SDL_Texture *scoreTexture = nullptr;
 	SDL_Rect typingPos;
 	SDL_Rect scorePos;
 
-	std::vector<WordTexture> words;
+	std::vector<WordTexture *> words;
 	WordTexture overlay;
 	// Keeps routes' status as available or not, used to spawn textures at
 	// pseudo-random locations

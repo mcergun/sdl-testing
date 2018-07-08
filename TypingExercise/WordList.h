@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <mutex>
 
 typedef void(*WordTyped)(size_t);
 
@@ -13,7 +12,6 @@ public:
 	WordList();
 	void ReadFile(std::string path);
 	void SetWordTypedNotifier(WordTyped func);
-	void SetMutex(std::mutex *mtx);
 	std::string GetRandomWord();
 	WordList & AddWord(std::string word);
 	size_t InsertCharacter(const char c);
@@ -26,12 +24,12 @@ public:
 
 	std::vector<std::string> activeWords = std::vector<std::string>();
 private:
+	static constexpr unsigned int DEF_COLLECTION_SIZE = 32;
 	std::vector<bool>wordMatches = std::vector<bool>();
 	std::vector<std::string> dictionary = std::vector<std::string>();
 	char compareBuf[256] = { 0 };
 	unsigned int bufIdx = 0;
 	WordTyped wordTyped = nullptr;
-	std::mutex *listMutex = nullptr;
 };
 
 #endif

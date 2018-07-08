@@ -11,7 +11,6 @@ public:
 	~SDLInputHandler();
 	int Initialize();
 	int ReadKey();
-	char KeyToVisualChar(int enumCode);
 private:
 	SDL_Event e;
 };

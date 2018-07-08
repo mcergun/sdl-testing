@@ -79,10 +79,3 @@ int SDLInputHandler::ReadKey()
 	}
 	return ret;
 }
-
-char SDLInputHandler::KeyToVisualChar(int enumCode)
-{
-	SDL_Keycode key = static_cast<SDL_Keycode>(enumCode);
-
-	return 0;
-}

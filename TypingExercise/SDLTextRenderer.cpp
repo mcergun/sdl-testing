@@ -13,6 +13,8 @@ SDLTextRenderer::SDLTextRenderer(std::string path, unsigned int size, int flags)
 
 SDLTextRenderer::~SDLTextRenderer()
 {
+	DestroyTexture(scoreTexture);
+	DestroyTexture(typingTexture);
 	if (win)
 		SDL_DestroyWindow(win);
 	if (renderer)
@@ -66,7 +68,7 @@ void SDLTextRenderer::Reset()
 {
 	for (auto itm : words)
 	{
-		SDL_DestroyTexture(itm.texture);
+		SDL_DestroyTexture(itm->texture);
 	}
 	words.clear();
 	totalCount = 0;
@@ -107,7 +109,11 @@ int SDLTextRenderer::AddWord(std::string text, Color color)
 			textureRouteAvailablity[idx] = false;
 			rect.y = idx * rect.h;
 			rect.x = -rect.w;
-			words.push_back({ texture, rect, idx });
+			WordTexture *word = new WordTexture;
+			word->texture = texture;
+			word->size = rect;
+			word->usedRoute = idx;
+			words.push_back(word);
 			totalCount++;
 		}
 	}
@@ -120,7 +126,11 @@ int SDLTextRenderer::AddWordAt(std::string text, int x, int y, Color color)
 	SDL_Rect rect{ x, y, 0, 0 };
 	if (SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h) == 0)
 	{
-		words.push_back({texture, rect, 0});
+		WordTexture *word = new WordTexture;
+		word->texture = texture;
+		word->size = rect;
+		word->usedRoute = 0;
+		words.push_back(word);
 	}
 	int ret = 0;
 	return ret;
@@ -133,16 +143,16 @@ void SDLTextRenderer::MoveWord(size_t wordIdx, MoveDirection direction, int amou
 		switch (direction)
 		{
 		case ToLeft:
-			words[wordIdx].size.x -= amount;
+			words[wordIdx]->size.x -= amount;
 			break;
 		case ToRight:
-			words[wordIdx].size.x += amount;
+			words[wordIdx]->size.x += amount;
 			break;
 		case ToDown:
-			words[wordIdx].size.x -= amount;
+			words[wordIdx]->size.x -= amount;
 			break;
 		case ToUp:
-			words[wordIdx].size.y += amount;
+			words[wordIdx]->size.y += amount;
 			break;
 		default:
 			break;
@@ -151,16 +161,16 @@ void SDLTextRenderer::MoveWord(size_t wordIdx, MoveDirection direction, int amou
 		// if equal is changed into a greater than sign, then this check succeeds every time
 		// leading to textures resetting route to available even though it has been set to
 		// unavailable by a new word in a previous frame.
-		if (words[wordIdx].size.x < 30)
+		if (words[wordIdx]->size.x < 30)
 		{
-			textureRouteAvailablity[words[wordIdx].usedRoute] = false;
+			textureRouteAvailablity[words[wordIdx]->usedRoute] = false;
 		}
-		else if (words[wordIdx].size.x == 30)
+		else if (words[wordIdx]->size.x == 30)
 		{
-			textureRouteAvailablity[words[wordIdx].usedRoute] = true;
+			textureRouteAvailablity[words[wordIdx]->usedRoute] = true;
 		}
 
-		if (IsRectOutOfBounds(&words[wordIdx].size))
+		if (IsRectOutOfBounds(&words[wordIdx]->size))
 		{
 			wordOutOfBounds(wordIdx);
 		}
@@ -199,9 +209,9 @@ void SDLTextRenderer::MoveWord(size_t wordIdx, int x, int y)
 {
 	if (wordIdx < words.size())
 	{
-		words[wordIdx].size.x = x;
-		words[wordIdx].size.y = y;
-		if (IsRectOutOfBounds(&words[wordIdx].size))
+		words[wordIdx]->size.x = x;
+		words[wordIdx]->size.y = y;
+		if (IsRectOutOfBounds(&words[wordIdx]->size))
 		{
 			wordOutOfBounds(wordIdx);
 		}
@@ -220,10 +230,11 @@ void SDLTextRenderer::RemoveWordAtIdx(size_t idx)
 {
 	if (idx < words.size())
 	{
-		if (words[idx].size.x < 30)
+		if (words[idx]->size.x < 30)
 		{
-			textureRouteAvailablity[words[idx].usedRoute] = true;
+			textureRouteAvailablity[words[idx]->usedRoute] = true;
 		}
+		delete words[idx];
 		words.erase(words.begin() + idx);
 	}
 }
@@ -290,24 +301,33 @@ void SDLTextRenderer::CalculateSizeParameters(SDL_Rect &rect)
 	scorePos.y = (screenCapacity + 1) * rect.h;
 }
 
+void SDLTextRenderer::DestroyTexture(SDL_Texture * text)
+{
+	if (text)
+	{
+		SDL_DestroyTexture(text);
+		text = nullptr;
+	}
+}
+
 int SDLTextRenderer::DrawAllWords()
 {
 	int ret = -1;
 	if (words.size() > 1)
 	{
-		ret = DrawTexture(words[0].texture, &words[0].size, false, true);
+		ret = DrawTexture(words[0]->texture, &words[0]->size, false, true);
 		for (size_t i = 1; i < words.size() - 1; ++i)
 		{
-			ret |= DrawTexture(words[i].texture, &words[i].size);
+			ret |= DrawTexture(words[i]->texture, &words[i]->size);
 		}
 		if (overlay.texture != nullptr)
 			ret |= DrawTexture(overlay.texture, &overlay.size);
-		ret |= DrawTexture(words[words.size() - 1].texture, &words[words.size() - 1].size, true);
+		ret |= DrawTexture(words[words.size() - 1]->texture, &words[words.size() - 1]->size, true);
 		SDL_Delay(1);
 	}
 	else if (words.size() == 1)
 	{
-		ret = DrawTexture(words[0].texture, &words[0].size, true, true);
+		ret = DrawTexture(words[0]->texture, &words[0]->size, true, true);
 		SDL_Delay(1);
 	}
 	return ret;
@@ -315,10 +335,7 @@ int SDLTextRenderer::DrawAllWords()
 
 int SDLTextRenderer::UpdateScore(int newScore)
 {
-	if (scoreTexture != NULL)
-	{
-		SDL_DestroyTexture(scoreTexture);
-	}
+	DestroyTexture(scoreTexture);
 	scoreTexture = CreateTexture("Score: " + std::to_string(newScore));
 	SDL_QueryTexture(scoreTexture, nullptr, nullptr, &scorePos.w, &scorePos.h);
 	if (scorePos.x + scorePos.w + 10 != winWidth)
@@ -330,10 +347,7 @@ int SDLTextRenderer::UpdateScore(int newScore)
 
 int SDLTextRenderer::UpdateWrittenWord(std::string word)
 {
-	if (typingTexture != NULL)
-	{
-		SDL_DestroyTexture(typingTexture);
-	}
+	DestroyTexture(typingTexture);
 	typingTexture = CreateTexture(word);
 	SDL_QueryTexture(typingTexture, nullptr, nullptr, &typingPos.w, &typingPos.h);
 	return 0;
@@ -341,17 +355,13 @@ int SDLTextRenderer::UpdateWrittenWord(std::string word)
 
 int SDLTextRenderer::UpdateWordOverlay(size_t underIdx, std::string typedWord)
 {
-	if (overlay.texture != nullptr)
-	{
-		SDL_DestroyTexture(overlay.texture);
-		overlay.texture = nullptr;
-	}
+	DestroyTexture(overlay.texture);
 	if (underIdx != -1)
 	{
 		overlay.texture = CreateTexture(typedWord, ColorRed);
 		SDL_QueryTexture(overlay.texture, nullptr, nullptr, &overlay.size.w, &overlay.size.h);
-		overlay.size.x = words[underIdx].size.x;
-		overlay.size.y = words[underIdx].size.y;
+		overlay.size.x = words[underIdx]->size.x;
+		overlay.size.y = words[underIdx]->size.y;
 	}
 	return 0;
 }

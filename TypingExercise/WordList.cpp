@@ -5,8 +5,8 @@
 WordList::WordList()
 {
 	// reserve room for at least 10 words
-	activeWords.reserve(10);
-	wordMatches.reserve(10);
+	activeWords.reserve(DEF_COLLECTION_SIZE);
+	wordMatches.reserve(DEF_COLLECTION_SIZE);
 	srand(time(NULL));
 }
 
@@ -22,17 +22,14 @@ void WordList::ReadFile(std::string path)
 			dictionary.push_back(tmp);
 		}
 	}
+	fs.clear();
+	fs.close();
 }
 
 void WordList::SetWordTypedNotifier(WordTyped func)
 {
 	if (func)
 		wordTyped = func;
-}
-
-void WordList::SetMutex(std::mutex * mtx)
-{
-	listMutex = mtx;
 }
 
 std::string WordList::GetRandomWord()
