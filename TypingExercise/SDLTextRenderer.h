@@ -13,6 +13,7 @@ struct WordTexture
 	{
 		if (texture)
 			SDL_DestroyTexture(texture);
+		texture = nullptr;
 	}
 
 	SDL_Texture *texture;
