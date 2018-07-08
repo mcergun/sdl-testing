@@ -6,12 +6,11 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <TextRenderer.h>
-#include <iostream>
+
 struct WordTexture
 {
 	~WordTexture()
 	{
-		std::cout << "~WordTexture()" << std::endl;
 		if (texture)
 			SDL_DestroyTexture(texture);
 	}
