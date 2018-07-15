@@ -19,6 +19,7 @@ struct WordTexture
 	SDL_Texture *texture;
 	SDL_Rect size;
 	size_t usedRoute;
+	std::string text;
 };
 
 class SDLTextRenderer : public TextRenderer
@@ -51,7 +52,7 @@ private:
 	inline bool IsRectOutOfBounds(SDL_Rect *rect);
 	inline bool IsRouteClear(size_t wayIdx);
 	void CalculateSizeParameters(SDL_Rect &rect);
-	void DestroyTexture(SDL_Texture *text);
+	void DestroyTexture(SDL_Texture *&text);
 
 	SDL_Renderer *renderer = nullptr;
 	SDL_Window *win = nullptr;

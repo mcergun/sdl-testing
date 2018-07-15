@@ -113,6 +113,9 @@ int SDLTextRenderer::AddWord(std::string text, Color color)
 			word->texture = texture;
 			word->size = rect;
 			word->usedRoute = idx;
+#ifdef _DEBUG
+			word->text = text;
+#endif
 			words.push_back(word);
 			totalCount++;
 		}
@@ -130,6 +133,9 @@ int SDLTextRenderer::AddWordAt(std::string text, int x, int y, Color color)
 		word->texture = texture;
 		word->size = rect;
 		word->usedRoute = 0;
+#ifdef _DEBUG
+		word->text = text;
+#endif
 		words.push_back(word);
 	}
 	int ret = 0;
@@ -301,7 +307,7 @@ void SDLTextRenderer::CalculateSizeParameters(SDL_Rect &rect)
 	scorePos.y = (screenCapacity + 1) * rect.h;
 }
 
-void SDLTextRenderer::DestroyTexture(SDL_Texture * text)
+void SDLTextRenderer::DestroyTexture(SDL_Texture *&text)
 {
 	if (text)
 	{
