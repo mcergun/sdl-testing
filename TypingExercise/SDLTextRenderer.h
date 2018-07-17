@@ -19,7 +19,6 @@ struct WordTexture
 	SDL_Texture *texture;
 	SDL_Rect size;
 	size_t usedRoute;
-	std::string text;
 };
 
 class SDLTextRenderer : public TextRenderer

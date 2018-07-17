@@ -113,9 +113,6 @@ int SDLTextRenderer::AddWord(std::string text, Color color)
 			word->texture = texture;
 			word->size = rect;
 			word->usedRoute = idx;
-#ifdef _DEBUG
-			word->text = text;
-#endif
 			words.push_back(word);
 			totalCount++;
 		}
