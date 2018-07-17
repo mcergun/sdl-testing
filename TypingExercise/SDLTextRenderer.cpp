@@ -130,9 +130,6 @@ int SDLTextRenderer::AddWordAt(std::string text, int x, int y, Color color)
 		word->texture = texture;
 		word->size = rect;
 		word->usedRoute = 0;
-#ifdef _DEBUG
-		word->text = text;
-#endif
 		words.push_back(word);
 	}
 	int ret = 0;
