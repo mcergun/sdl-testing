@@ -225,7 +225,7 @@ int GameLogic::MainGame()
 	i++;
 	if (i % wordSpawnRate == 0)
 	{
-		std::string &word = words.GetRandomWord();
+		const std::string &word = words.GetRandomWord();
 		words.AddWord(word);
 		renderer->AddWord(word);
 	}
