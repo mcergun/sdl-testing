@@ -1,6 +1,7 @@
 #include <WordList.h>
 #include <fstream>
 #include <ctime>
+#include <cstring>
 
 WordList::WordList()
 {
