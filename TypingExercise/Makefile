@@ -6,8 +6,13 @@ OUTDIR = obj
 BINDIR = bin
 BINNAME = TypingExercise
 
-all: makedirs objects
+all: makedirs copyfiles objects
 	$(CXX) -o $(BINDIR)/$(BINNAME) $(OUTDIR)/main.o $(OUTDIR)/WordList.o $(OUTDIR)/SDLTextRenderer.o $(OUTDIR)/SDLInputHandler.o $(OUTDIR)/GameLogic.o $(LDFLAGS) 
+
+copyfiles:
+	cp -rf fonts bin/
+	cp google-10000-english-usa-no-swears.txt bin/
+	cp settings.txt bin/
 
 makedirs:
 	mkdir -p $(OUTDIR)
