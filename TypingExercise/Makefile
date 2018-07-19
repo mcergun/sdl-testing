@@ -1,12 +1,14 @@
 CXX = g++
-CFLAGS = -I. -I`pkg-config --cflags sdl2` -Wall
-LDFLAGs = `pkg-config --libs sdl2` -lSDL2_ttf
+DBGFLAGS = -D_DEBUG -g
+CFLAGS = -Wall -I. `pkg-config --cflags sdl2` 
+LDFLAGS = `pkg-config --libs sdl2` -lSDL2_ttf
 OUTDIR = obj
 BINDIR = bin
 BINNAME = TypingExercise
 
 all: makedirs objects
-	$(CXX) -o $(BINDIR)/$(BINNAME) $(LDFLAGS) $(OUTDIR)/main.o $(LDFLAGS) $(OUTDIR)/WordList.o $(LDFLAGS) $(OUTDIR)/SDLTextRenderer.o $(LDFLAGS) $(OUTDIR)/SDLInputHandler.o $(LDFLAGS) $(OUTDIR)/GameLogic.o $(LDFLAGS)
+	$(CXX) -o $(BINDIR)/$(BINNAME) $(OUTDIR)/main.o $(OUTDIR)/WordList.o $(OUTDIR)/SDLTextRenderer.o $(OUTDIR)/SDLInputHandler.o $(OUTDIR)/GameLogic.o $(LDFLAGS) 
+
 makedirs:
 	mkdir -p $(OUTDIR)
 	mkdir -p $(BINDIR)
